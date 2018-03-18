@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                DataTables Advanced Tables
+                <p><a href="#!/login">Logout</a></p>
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <table width="100%" class="table table-striped table-bordered table-hover" ng-table="vm.tableParams" show-filter="true">
+                    <tr class="odd gradeX" ng-repeat="c in $data">
+                        <td title="'Claim ID'" filter="{claimid: 'text'}" class="center">{{ c.claimid }}</td>
+                        <td title="'Summary'">{{ c.summary }}</td>
+                        <td title="'Property'">{{ c.property.name }} {{ c.property.address1 }} {{ c.property.address2 }}</td>
+                        <td title="'Suburb'" filter="{ suburb: 'select'}" sortable="'suburb'">{{ c.property.suburb }}</td>
+                        <td title="'State'">{{ c.property.state }}</td>
+                        <td title="'Type'" >{{ c.claimtype.name }}</td>
+                        <td title="'Submitted Date'">{{ c.submitteddate }}</td>
+                        <td title="'Submitted User'" ng-if="adminuser">{{ c.submitteduser }}</td>
+                        <td title="'Status'">{{ c.status.statusname }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
