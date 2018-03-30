@@ -2,28 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Signup</title>
 </head>
 <body>
 
 <div class="container">
     <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-            <div class="login-panel panel panel-default">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="signup-panel panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Login to Ace Body Online</h3>
+                    <h3 class="panel-title">Signup to Ace Body Online</h3>
                 </div>
                 <div class="panel-body">
-                    <div class="alert alert-info">
-                        Username: test<br />
-                        Password: test
-                    </div>
-                    <form role="form" name="form" ng-submit="form.$valid && vm.login()" novalidate>
+                    <form role="form" name="form" ng-submit="form.$valid && vm.create()" novalidate>
                         <div class="form-group" ng-class="{ 'has-error': form.$submitted && form.username.$invalid }">
                             <label for="username">Username</label>
                             <input type="text" name="username" class="form-control" ng-model="vm.username" required />
                             <div ng-messages="form.$submitted && form.username.$error" class="help-block">
                                 <div ng-message="required">Username is required</div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': form.$submitted && form.firstname.$invalid }">
+                            <label for="firstname">First name</label>
+                            <input type="text" name="firstname" class="form-control" ng-model="vm.firstname" required />
+                            <div ng-messages="form.$submitted && form.firstname.$error" class="help-block">
+                                <div ng-message="required">First name is required</div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': form.$submitted && form.lastname.$invalid }">
+                            <label for="lastname">Last name</label>
+                            <input type="text" name="lastname" class="form-control" ng-model="vm.lastname" required />
+                            <div ng-messages="form.$submitted && form.lastname.$error" class="help-block">
+                                <div ng-message="required">Last name is required</div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': form.$submitted && form.email.$invalid }">
+                            <label for="email">Email</label>
+                            <input type="text" name="email" class="form-control" ng-model="vm.email" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" required />
+                            <div ng-messages="form.$submitted && form.email.$error" class="help-block">
+                                <div ng-message="pattern">Invalid email address</div>
+                                <div ng-message="required">Email is required</div>
                             </div>
                         </div>
                         <div class="form-group" ng-class="{ 'has-error': form.$submitted && form.password.$invalid }">
@@ -34,16 +52,15 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <button ng-disabled="vm.loading" class="btn btn-lg btn-success btn-block">Login</button>
+                            <button ng-disabled="vm.loading" class="btn btn-lg btn-success btn-block">Signup</button>
                             <img ng-if="vm.loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
                         </div>
                         <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
                     </form>
                     <div class="form-group">
-                        No account? <a href="#!/signup" ui-sref="signup">Sign-up now</a>
+                        Have an account? <a href="#!/login">Sign-in</a>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
 </div>

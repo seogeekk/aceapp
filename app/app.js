@@ -20,7 +20,7 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
 'use strict';
 
 angular
-  .module('app', ['ui.router', 'ngMessages', 'ngStorage', 'ngTable'])
+  .module('app', ['ui.router', 'ngMessages', 'ngStorage', 'ngTable', 'ui.bootstrap', 'ui.select', 'ngSanitize'])
   .config(config)
   .run(run);
 
@@ -31,16 +31,54 @@ function config($stateProvider, $urlRouterProvider) {
    $stateProvider
        .state('home', {
            url: '/',
-           templateUrl: 'claim/index.view.html',
-           controller: 'Claim.IndexController',
-           controllerAs: 'vm'
+           views: {
+               '@': {
+                   templateUrl: 'home/index.view.html',
+                   controller: 'Home.IndexController',
+                   controllerAs: 'vm'
+               },
+               'body@home': {
+                   controller: function($state) {
+                       $state.go('request');
+                   }
+               }
+           }
+       })
+       .state('request', {
+           url: 'request',
+           parent: 'home',
+           views: {
+               'body@home': {
+                   templateUrl: 'claim/index.view.html',
+                   controller: 'Claim.IndexController',
+                   controllerAs: 'vm'
+               }
+           }
+       })
+       .state('customer', {
+           url: 'customer',
+           parent: 'home',
+           views: {
+               'body@home': {
+                   templateUrl: 'customer/index.view.html',
+                   controller: 'Customer.IndexController',
+                   controllerAs: 'vm'
+               }
+           }
        })
        .state('login', {
            url: '/login',
            templateUrl: 'login/index.view.html',
            controller: 'Login.IndexController',
            controllerAs: 'vm'
-       });
+       })
+       .state('signup', {
+           url: '/signup',
+           templateUrl: 'signup/index.view.html',
+           controller: 'Signup.IndexController',
+           controllerAs: 'vm'
+
+       })
 }
 
 function run($rootScope, $http, $location, $localStorage) {
@@ -51,7 +89,7 @@ function run($rootScope, $http, $location, $localStorage) {
    }
 
    $rootScope.$on('$locationChangeStart', function(event, next, current) {
-       var publicPages = ['/login'];
+       var publicPages = ['/login', '/signup'];
        var restrictedPage = publicPages.indexOf($location.path()) === -1;
        if (restrictedPage && !$localStorage.currentUser) {
           $location.path('/login');

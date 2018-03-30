@@ -2,7 +2,7 @@
 
 angular.module('myApp.version.version-directive', [])
 
-    .service('CustomerService', ['$http', '$q', function($http, $q) {
+    .service('Customer1Service', ['$http', '$q', function($http, $q) {
         var apiDomain = 'http://localhost:3000';
 
         var getToken = function () {

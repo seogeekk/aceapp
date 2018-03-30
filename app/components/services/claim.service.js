@@ -24,7 +24,7 @@
 
         return service;
 
-        function GetClaim(/* might use username */callback) {
+        function GetClaim(callback) {
             $http.get(apiDomain + apiVersion + '/claim', config)
                 .then( function (response) {
 

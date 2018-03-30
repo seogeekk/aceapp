@@ -11,6 +11,8 @@
     "angular-ui-router": "^1.0.15",
     "angular-messages": "^1.6.9",
     "ngstorage": "^0.3.11",
-    "ng-table-bundle": "^4.0.0"
+    "ng-table-bundle": "^4.0.0",
+    "angular-bootstrap": "^2.5.0",
+    "angular-ui-select": "^0.19.8"
   }
 }

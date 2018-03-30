@@ -5,22 +5,55 @@
         .module('app')
         .controller('Claim.IndexController', ['ClaimService', '$scope', 'NgTableParams', function(ClaimService, $scope, NgTableParams){
 
-            console.log("Initialise");
             $scope.adminuser = true;
 
             var self = this;
+
             ClaimService.GetClaim(function(data) {
-               if (data) {
-                   console.log(data);
-                   self.tableParams = new NgTableParams({}, { dataset: data});
-               } else {
-                   console.log("No Results");
-               }
+                if (data) {
+                    console.log(data);
+                    self.tableParams = new NgTableParams({
+                        page: 1,
+                        count: 25
+                    }, {
+                        dataset: data
+                    });
+                } else {
+                    self.tableParams = new NgTableParams({
+                        page: 1,
+                        count: 25
+                    }, {
+                        dataset: {}
+                    });
+                }
             });
-                // .then(function(data){
-                //     console.log ("CLAIMS: " + data);
-                //     $scope.c = data;
-                // });
+
+
+            self.getStatus = getStatus;
+            self.getClaimType = getClaimType;
+
+            function getClaimType() {
+                var types = [
+                    {claimtype: "Inquiry"},
+                    {claimtype: "Complaint"},
+                    {claimtype: "Request"},
+                    {claimtype: "Maintenance"}
+                ];
+
+                return types;
+            }
+
+            function getStatus() {
+                var statuses = [
+                    {status: "Open"},
+                    {status: "Assigned"},
+                    {status: 'In Review'},
+                    {status: 'Closed'}
+                ];
+
+                return statuses;
+            }
+
 
         }]);
 })();

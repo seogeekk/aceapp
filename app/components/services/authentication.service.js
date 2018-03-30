@@ -18,12 +18,18 @@
         function Login(username, password, callback) {
             $http.post(apiDomain + '/login', {username: username, password: password})
                 .then( function (response) {
-                    console.log(response);
                     // login successful if there's a token in the reponse
                     var payload = response.data;
                     if(payload.token) {
                         // store username and token in local storage to keep user logged in between page refreshes
-                        $localStorage.currentUser = { username: payload.user.username, token: payload.token };
+                        $localStorage.currentUser = {
+                            username: payload.user.username,
+                            token: payload.token,
+                            firstname: payload.user.firstname,
+                            lastname: payload.user.lastname,
+                            roleid: payload.user.roleid,
+                            status: payload.user.status
+                        };
 
                         // add jwt token to auth header for all requests made by the $http service
                         $http.defaults.headers.post['x-access-token'] = payload.token;

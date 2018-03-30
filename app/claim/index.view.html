@@ -5,28 +5,31 @@
     <title>Title</title>
 </head>
 <body>
-<div class="row">
-    <div class="col-lg-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                DataTables Advanced Tables
-                <p><a href="#!/login">Logout</a></p>
-            </div>
-            <!-- /.panel-heading -->
-            <div class="panel-body">
-                <table width="100%" class="table table-striped table-bordered table-hover" ng-table="vm.tableParams" show-filter="true">
-                    <tr class="odd gradeX" ng-repeat="c in $data">
-                        <td title="'Claim ID'" filter="{claimid: 'text'}" class="center">{{ c.claimid }}</td>
-                        <td title="'Summary'">{{ c.summary }}</td>
-                        <td title="'Property'">{{ c.property.name }} {{ c.property.address1 }} {{ c.property.address2 }}</td>
-                        <td title="'Suburb'" filter="{ suburb: 'select'}" sortable="'suburb'">{{ c.property.suburb }}</td>
-                        <td title="'State'">{{ c.property.state }}</td>
-                        <td title="'Type'" >{{ c.claimtype.name }}</td>
-                        <td title="'Submitted Date'">{{ c.submitteddate }}</td>
-                        <td title="'Submitted User'" ng-if="adminuser">{{ c.submitteduser }}</td>
-                        <td title="'Status'">{{ c.status.statusname }}</td>
-                    </tr>
-                </table>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Requests</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <table width="100%" class="table table-striped table-bordered table-hover" ng-table="vm.tableParams" show-filter="true">
+                        <tr class="odd gradeX" ng-repeat="c in $data">
+                            <td data-title="'No'" sortable="'claimid'" class="center">{{ c.claimid }}</td>
+                            <td data-title="'Summary'" filter="{summary: 'text'}">{{ c.summary }}</td>
+                            <td data-title="'Address 1'" filter="{'property.address1': 'text'}">{{ c.property.name }} {{ c.property.address1 }}</td>
+                            <td data-title="'Address 2'" filter="{'property.address2': 'text'}">{{ c.property.address2 }}</td>
+                            <td data-title="'Suburb'" filter="{'property.suburb': 'text'}">{{ c.property.suburb }}</td>
+                            <td data-title="'State'" filter="{'property.state': 'text'}">{{ c.property.state }}</td>
+                            <td data-title="'Type'" filter="{'claimtype': 'select'}" filter-data="vm.getClaimType">{{ c.claimtype.name }}</td>
+                            <td data-title="'Submitted Date'" sortable="'submitteddate'">{{ c.submitteddate }}</td>
+                            <td data-title="'Submitted User'" ng-if="adminuser" filter="{'submitteduser': 'text'}">{{ c.submitteduser }}</td>
+                            <td data-title="'Status'" filter="{status: 'select'}" filter-data="vm.getStatus">{{ c.status.statusname }}</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
