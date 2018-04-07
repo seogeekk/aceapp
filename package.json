@@ -32,6 +32,7 @@
     },
     "proxy": "http://localhost:3000",
     "dependencies": {
-        "angular-auto-complete": "^1.7.0"
+        "angular-auto-complete": "^1.7.0",
+        "grunt": "^1.0.2"
     }
 }
