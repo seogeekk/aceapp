@@ -112,6 +112,13 @@ body {
     margin-left: auto;
   }
 }
+.btn-unclickable:hover {
+  cursor: default;
+}
+.btn-unclickable {
+  text-decoration: none;
+  pointer-events: none;
+}
 .btn-outline {
   color: inherit;
   background-color: transparent;

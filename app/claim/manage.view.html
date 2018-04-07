@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Property</title>
+</head>
+<body>
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Your Request</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-9">
+        <div class="panel-group" id="snapshot-view">
+            <div class="panel panel-default" ng-show="vm.snapshot && vm.claimid">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#snapshot-view" href="#claim-summary-view" target="_self">Claim Summary</a>
+                            </h4>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <a href="" target="_self" ng-click="toggleEdit()"><i class="fa fa-pencil"></i> Edit</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="claim-summary-view" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <h4>Request ID</h4>
+                            </div>
+                            <div class="col-xs-4">
+                                <button type="button" class="btn btn-unclickable btn-outline btn-primary btn-block" disabled>{{vm.claimid}}</button>
+                            </div>
+                        </div>
+                        <div class="row"><hr/></div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <p><strong>Summary</strong></p>
+                            </div>
+                            <div class="col-xs-8">
+                                <p>{{vm.summary}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <p><strong>Claim Type</strong></p>
+                            </div>
+                            <div class="col-xs-8">
+                                <p>{{vm.claimtype.claimtypename}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <p><strong>Property</strong></p>
+                            </div>
+                            <div class="col-xs-8">
+                                <p>{{vm.address1}}</p>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="vm.address2">
+                            <div class="col-xs-4">
+                                <p><strong></strong></p>
+                            </div>
+                            <div class="col-xs-8">
+                                <p>{{vm.address2}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <p><strong></strong></p>
+                            </div>
+                            <div class="col-xs-8">
+                                <p>{{vm.suburb}}, {{vm.state}} {{vm.postcode}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <p><strong></strong></p>
+                            </div>
+                            <div class="col-xs-8">
+                                <p>{{vm.country}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <p><strong>Description</strong></p>
+                            </div>
+                            <div class="col-xs-8">
+                                <p>{{vm.description}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default" ng-show="vm.editflag">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#snapshot-view" href="#addclaim" target="_self" ng-if="vm.claimid">Edit Claim Details</a>
+                                <a data-toggle="collapse" data-parent="#snapshot-view" href="#addclaim" target="_self" ng-if="!vm.claimid">Submit Claim</a>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                <div id="addclaim" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <form role="form" name="form" ng-submit="form.$valid && vm.submit()" novalidate>
+                            <div class="invisible"><input type="hidden" name="claimid" class="form-control" ng-model="vm.claimid"/></div>
+                            <div class="form-group row">
+                                <div class="col-xs-12">
+                                    <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+                                    <div ng-if="vm.alertmessage" class="alert alert-success">{{vm.alertmessage}}</div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.claimtype.$invalid }">
+                                    <label for="claimtype">Claim Type</label>
+                                    <ui-select name="claimtype" ng-model="vm.claimtype" ng-disabled="vm.disabled" title="Claim Type" required>
+                                        <ui-select-match>
+                                            <span ng-bind="vm.claimtype.claimtypename"></span>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="c in (vm.claimtypes | filter: $select.search) track by c.claimtypeid">
+                                            <span ng-bind="c.claimtypename"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <div ng-messages="form.$submitted && form.claimtype.$error" class="help-block">
+                                        <div ng-message="required">Claim type is required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-xs-12" ng-class="{ 'has-error': form.$submitted && form.summary.$invalid }">
+                                    <label for="summary">Summary</label>
+                                    <input type="text" name="summary" class="form-control" ng-model="vm.summary" required ng-disabled="vm.disabled"/>
+                                    <div ng-messages="form.$submitted && form.summary.$error" class="help-block">
+                                        <div ng-message="required">Summary is required</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-xs-12" ng-class="{ 'has-error': form.$submitted && form.property.$invalid }">
+                                    <label for="property">Property</label>
+                                    <input type="text" name="property" ng-model="vm.property" ng-keyup="complete(vm.property)" class="form-control" required/>
+                                    <ul class="list-group">
+                                        <li class="list-group-item" ng-repeat="address in addresslist" ng-click="fillTextbox(address)">{{address}}</li>
+                                    </ul>
+                                    <div ng-messages="form.$submitted && form.property.$error" class="help-block">
+                                        <div ng-message="required">Property is required</div>
+                                        <div ng-if="vm.searcherror" class="alert alert-danger">{{vm.searcherror}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-xs-12" ng-class="{ 'has-error': form.$submitted && form.description.$invalid }">
+                                    <label for="description">Description</label>
+                                    <textarea name="description" class="form-control" style="resize:none" rows="4" ng-model="vm.description" required ng-disabled="vm.disabled"/>
+                                    <div ng-messages="form.$submitted && form.description.$error" class="help-block">
+                                        <div ng-message="required">Description is required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-xs-12">
+                                    <div class="btn-toolbar">
+                                        <button ng-disabled="vm.loading" class="btn btn-success btn-circle btn-lg"><i class="fa fa-check"></i></button>
+                                        <button type="button" ng-disabled="vm.loading" class="btn btn-danger btn-circle btn-lg" ng-click="toggleClose()"><i class="fa fa-times"></i></button>
+                                        <img ng-if="vm.loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default" ng-show="vm.claimid && !vm.workaddflag">
+                <div class="panel-heading">
+
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#snapshot-view" href="#claim-work-view" target="_self">Claim History</a>
+                            </h4>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <a href="" target="_self" ng-show="vm.claimid" ng-click="showWorkForm()"><i class="fa fa-plus"></i> Add Worklog</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="claim-work-view" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <ul class="timeline">
+                            <li ng-class="timelineType($index)" ng-repeat="w in vm.workitems">
+                                <div class="invisible"><input type="hidden" name="workitemid" class="form-control" ng-model="vm.workitemid"/></div>
+                                <div class="timeline-badge"><i class="fa fa-check"></i>
+                                </div>
+                                <div class="timeline-panel">
+                                    <div class="timeline-heading">
+                                        <h4 class="timeline-title">{{w.description}}</h4>
+                                    </div>
+                                    <div class="timeline-body">
+                                        <p>{{w.notes}}</p>
+                                        <p class="text-right"><i class="fa fa-arrow-circle-o-down"></i> <a href="" target="_self">Download attachment</a></p>
+                                        <p><small class="text-muted"><i class="fa fa-clock-o"></i> last modified: {{w.auditwhen}} by {{w.auditwho}}</small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default" ng-if="vm.claimid && vm.workaddflag">
+
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#snapshot-view" href="#ownership" target="_self">Worklog</a>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                <div id="ownership" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <form role="form" name="form" ng-submit="form.$valid && vm.submitwork()" novalidate>
+                            <div class="form-group row">
+                                <div class="col-xs-12">
+                                    <div ng-if="vm.workerror" class="alert alert-danger">{{vm.workerror}}</div>
+                                    <div ng-if="vm.workmessage" class="alert alert-success">{{vm.workmessage}}</div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-xs-6" ng-class="{ 'has-error': form.$submitted && form.worklogdesc.$invalid }">
+                                    <label for="worklogdesc">Summary</label>
+                                    <input type="text" name="worklogdesc" class="form-control" ng-model="vm.worklogdesc" required/>
+                                    <div ng-messages="form.$submitted && form.worklogdesc.$error" class="help-block">
+                                        <div ng-message="required">Summary is required</div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.worktype.$invalid }">
+                                    <label for="worktype">Work Type</label>
+                                    <ui-select name="worktype" ng-model="vm.worktype" title="Work Type" required>
+                                        <ui-select-match>
+                                            <span ng-bind="vm.worktype.worktypename"></span>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="w in (vm.worktypes | filter: $select.search) track by w.worktypetypeid">
+                                            <span ng-bind="w.worktypename"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <div ng-messages="form.$submitted && form.worktype.$error" class="help-block">
+                                        <div ng-message="required">Work type is required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-xs-12" ng-class="{ 'has-error': form.$submitted && form.worknotes.$invalid }">
+                                    <label for="worknotes">Notes</label>
+                                    <textarea name="worknotes" rows="5" class="form-control" style="resize:none" ng-model="vm.worknotes"/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-xs-6" ng-class="{ 'has-error': form.$submitted && form.attachment.$invalid }">
+                                    <label for="attachment">Attachment</label>
+                                    <input type="file" name="attachment" accept=".pdf,.xls,.xlsx,.doc,.docx,.jpg,.png,.tif,.bmp,.txt" ngf-select ng-model="vm.attachment" ngf-max-size="2MB" ngf-model-invalid="errorFile" aria-describedby="fileHelp"/>
+                                    <small id="fileHelp" class="form-text text-muted">Optional: Allows doc, pdf and image upload (2mb max)</small>
+                                    <div ng-messages="form.$submitted && form.attachment.$error" class="help-block">
+                                        <div ng-message="maxSize">File too large {{errorFile.size / 1000000|number:1}}MB: max 2M</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-xs-12">
+                                    <div class="btn-toolbar">
+                                        <button ng-disabled="vm.loading" class="btn btn-success btn-circle btn-lg"><i class="fa fa-check"></i></button>
+                                        <button type="button" ng-disabled="vm.loading" class="btn btn-danger btn-circle btn-lg" ng-click="hideWorkForm()"><i class="fa fa-times"></i></button>
+                                        <img ng-if="vm.loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

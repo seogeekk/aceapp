@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Property</title>
+</head>
+<body>
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Your Properties</h1>
+    </div>
+</div>
+
+<div class="row">
+    <form role="form" name="form" ng-submit="form.$valid && vm.submit()" novalidate>
+        <div class="col-lg-9">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#addproperty" target="_self">Property Address</a>
+                        </h4>
+                    </div>
+                    <div id="addproperty" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                                <div class="invisible"><input type="hidden" name="propertyid" class="form-control" ng-model="vm.propertyid"/></div>
+                                <div class="invisible"><input type="hidden" name="canonicalid" class="form-control" ng-model="vm.canonicalid"/></div>
+                                <div class="form-group row">
+                                    <div class="col-lg-1">
+                                        <label for="property">Search</label>
+                                    </div>
+                                    <div class="col-xs-9" ng-class="{ 'has-error': form.$submitted && form.property.$invalid }">
+                                        <input type="text" name="property" ng-model="vm.property" ng-keyup="complete(vm.property)" class="form-control input-sm"/>
+                                        <ul class="list-group">
+                                            <li class="list-group-item" ng-repeat="address in addresslist" ng-click="fillTextbox(address)">{{address}}</li>
+                                        </ul>
+                                        <div ng-if="vm.searcherror" class="alert alert-danger">{{vm.searcherror}}</div>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input ng-click="populateFields()" type="button" value="Fill" class="btn btn-sm btn-primary btn-block"/>
+                                        <!--<button class="btn btn-sm btn-primary btn-block" ng-click="fillTextbox(vm.property)">Fill</button>-->
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+
+                                    <div class="invisible"><input type="hidden" name="latitude" class="form-control" ng-model="vm.latitude"/></div>
+                                    <div class="invisible"><input type="hidden" name="longitude" class="form-control" ng-model="vm.longitude"/></div>
+                                    <div class="invisible"><input type="hidden" name="unit_type" class="form-control" ng-model="vm.unit_type"/></div>
+                                    <div class="invisible"><input type="hidden" name="mesh_block" class="form-control" ng-model="vm.mesh_block"/></div>
+
+
+                                    <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.addressone.$invalid }">
+                                        <label for="addressone">Address 1</label>
+                                        <input type="text" name="addressone" class="form-control" ng-model="vm.addressone" required ng-disabled="true"/>
+                                        <div ng-messages="form.$submitted && form.addressone.$error" class="help-block">
+                                            <div ng-message="required">Address 1 is required</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.addresstwo.$invalid }">
+                                        <label for="addresstwo">Address 2</label>
+                                        <input type="text" name="address2" class="form-control" ng-model="vm.addresstwo" ng-disabled="true"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.suburb.$invalid }">
+                                        <label for="suburb">Suburb</label>
+                                        <input type="text" name="suburb" class="form-control" ng-model="vm.suburb" required ng-disabled="true"/>
+                                        <div ng-messages="form.$submitted && form.suburb.$error" class="help-block">
+                                            <div ng-message="required">Suburb is required</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3" ng-class="{ 'has-error': form.$submitted && form.state.$invalid }">
+                                        <label for="state">State</label>
+                                        <input type="text" name="state" class="form-control" ng-model="vm.state" required ng-disabled="true"/>
+                                        <div ng-messages="form.$submitted && form.state.$error" class="help-block">
+                                            <div ng-message="required">State 1 is required</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-2" ng-class="{ 'has-error': form.$submitted && form.postcode.$invalid }">
+                                        <label for="postcode">Postcode</label>
+                                        <input type="text" name="postcode" class="form-control" ng-model="vm.postcode" required ng-disabled="true"/>
+                                        <div ng-messages="form.$submitted && form.postcode.$error" class="help-block">
+                                            <div ng-message="required">Postcode is required</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.country.$invalid }">
+                                        <label for="country">Country</label>
+                                        <input type="text" name="country" class="form-control" ng-model="vm.country" required ng-disabled="true"/>
+                                        <div ng-messages="form.$submitted && form.country.$error" class="help-block">
+                                            <div ng-message="required">Country is required</div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#ownership" target="_self">Property Details</a>
+                        </h4>
+                    </div>
+                    <div id="ownership" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="form-group row">
+                                <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.propertytype.$invalid }">
+                                    <label for="propertytype">Property Type</label>
+                                    <ui-select name="propertytype" ng-model="vm.propertytype" ng-disabled="vm.disabled" title="Property Type" required>
+                                        <ui-select-match>
+                                            <span ng-bind="vm.propertytype.propertytypename"></span>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="p in (vm.propertytypes | filter: $select.search) track by p.propertytypeid">
+                                            <span ng-bind="p.propertytypename"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <div ng-messages="form.$submitted && form.propertytype.$error" class="help-block">
+                                        <div ng-message="required">Property type is required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.ownername.$invalid }">
+                                    <label for="ownername">Owner Name</label>
+                                    <input type="text" name="address1" class="form-control" ng-model="vm.ownername"/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.contact.$invalid }">
+                                    <label for="contact">Contact</label>
+                                    <input type="text" name="contact" class="form-control" ng-model="vm.contact" ng-pattern="/^(\+\d{1,3}[- ]?)?\d{10}$/"/>
+                                    <div ng-messages="form.$submitted && form.contact.$error" class="help-block">
+                                        <div ng-message="pattern">Invalid mobile number</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-3">
+            <div class="col-lg-12">
+                <button ng-disabled="vm.loading" class="btn btn-lg btn-success btn-block">Save</button>
+                <img ng-if="vm.loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+            </div>
+            <div class="form-group">&nbsp;</div>
+            <div class="col-lg-12">
+                <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+                <div ng-if="vm.alertmessage" class="alert alert-success">{{vm.alertmessage}}</div>
+            </div>
+
+        </div>
+    </form>
+</div>
+</body>
+</html>

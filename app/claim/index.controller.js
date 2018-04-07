@@ -3,57 +3,79 @@
 
     angular
         .module('app')
-        .controller('Claim.IndexController', ['ClaimService', '$scope', 'NgTableParams', function(ClaimService, $scope, NgTableParams){
+        .controller('Claim.IndexController', function(ClaimService, $scope, $state, $filter, $localStorage, NgTableParams){
 
             $scope.adminuser = true;
 
-            var self = this;
+            var vm = this;
+            initController();
 
-            ClaimService.GetClaim(function(data) {
-                if (data) {
-                    console.log(data);
-                    self.tableParams = new NgTableParams({
+            function initController() {
+                // Initialise variables
+                vm.username = $localStorage.currentUser.username;
+                vm.custname = $localStorage.currentUser.firstname + ' ' + $localStorage.currentUser.lastname;
+                vm.roleid = $localStorage.currentUser.roleid;
+            }
+
+            ClaimService.GetClaimByUser(vm.username, function(result, data) {
+                console.log(data);
+                if(result == false) {
+                    data = [];
+                    vm.tableParams = new NgTableParams({
                         page: 1,
                         count: 25
                     }, {
                         dataset: data
                     });
                 } else {
-                    self.tableParams = new NgTableParams({
+                    vm.tableParams = new NgTableParams({
                         page: 1,
                         count: 25
                     }, {
-                        dataset: {}
+                        dataset: data
                     });
                 }
             });
 
 
-            self.getStatus = getStatus;
-            self.getClaimType = getClaimType;
-
-            function getClaimType() {
-                var types = [
-                    {claimtype: "Inquiry"},
-                    {claimtype: "Complaint"},
-                    {claimtype: "Request"},
-                    {claimtype: "Maintenance"}
-                ];
-
-                return types;
+            $scope.viewClaim = function(claimid) {
+                $state.go('managerequest', { claimid: claimid });
             }
 
-            function getStatus() {
-                var statuses = [
-                    {status: "Open"},
-                    {status: "Assigned"},
-                    {status: 'In Review'},
-                    {status: 'Closed'}
-                ];
+            $scope.getCTypes = function() {
+                return ClaimService.GetClaimTypes()
+                    .then(function(response) {
 
-                return statuses;
+                        if(response) {
+                            var claimtypes = [];
+                            for (var i = 0; i < response.length; i++) {
+                                var item = { id: response[i].claimtypeid, title: response[i].claimtypename };
+                                claimtypes.push(item);
+                            }
+                            return claimtypes;
+                        } else {
+                            return null;
+                        }
+                    });
+            }
+
+            $scope.getSTypes = function() {
+                return ClaimService.GetStatusTypes()
+                    .then(function(response) {
+
+                        if(response) {
+                            var statustypes = [];
+                            for (var i = 0; i < response.length; i++) {
+                                var item = { id: response[i].statustypeid, title: response[i].statusname };
+                                statustypes.push(item);
+                            }
+                            return statustypes;
+                        } else {
+                            return null;
+                        }
+                    });
             }
 
 
-        }]);
+        });
 })();

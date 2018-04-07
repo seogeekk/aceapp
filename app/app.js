@@ -20,7 +20,7 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
 'use strict';
 
 angular
-  .module('app', ['ui.router', 'ngMessages', 'ngStorage', 'ngTable', 'ui.bootstrap', 'ui.select', 'ngSanitize'])
+  .module('app', ['ui.router', 'ngMessages', 'ngStorage', 'ngTable', 'ui.bootstrap', 'ui.select', 'ngSanitize', 'ngFileUpload'])
   .config(config)
   .run(run);
 
@@ -55,6 +55,18 @@ function config($stateProvider, $urlRouterProvider) {
                }
            }
        })
+       .state('managerequest', {
+           url: 'request/manage/:claimid',
+           parent: 'home',
+           //params: { claimid: null },
+           views: {
+               'body@home': {
+                   templateUrl: 'claim/manage.view.html',
+                   controller: 'ManageClaim.IndexController',
+                   controllerAs: 'vm'
+               }
+           }
+       })
        .state('customer', {
            url: 'customer',
            parent: 'home',
@@ -62,6 +74,27 @@ function config($stateProvider, $urlRouterProvider) {
                'body@home': {
                    templateUrl: 'customer/index.view.html',
                    controller: 'Customer.IndexController',
+                   controllerAs: 'vm'
+               }
+           }
+       })
+       .state('property', {
+           url: 'property',
+           parent: 'home',
+           views: {
+               'body@home': {
+                   templateUrl: 'property/index.view.html'
+               }
+           }
+       })
+       .state('manageproperty', {
+           url: 'property/manage',
+           parent: 'home',
+           params: { propertyid: null },
+           views: {
+               'body@home': {
+                   templateUrl: 'property/manage.view.html',
+                   controller: 'ManageProperty.IndexController',
                    controllerAs: 'vm'
                }
            }

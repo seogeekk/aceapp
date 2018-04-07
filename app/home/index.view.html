@@ -240,7 +240,7 @@
                             <a href="#!/requests"><i class="fa fa-edit fa-fw"></i> Requests</a>
                         </li>
                         <li>
-                            <a href="#!/properties"><i class="fa fa-home fa-fw"></i> Properties</a>
+                            <a href="#!/property"><i class="fa fa-home fa-fw"></i> Properties</a>
                         </li>
                         <li ng-show="vm.adminuser">
                             <a href="#!/staff"><i class="fa fa-user fa-fw"></i> Staff</a>
@@ -255,9 +255,7 @@
             <!-- /.navbar-static-side -->
         </nav>
 
-        <div id="page-wrapper">
-            <div ui-view="body"></div>
-        </div>
+        <div ui-view="body" id="page-wrapper"></div>
     </div>
 </body>
 </html>
