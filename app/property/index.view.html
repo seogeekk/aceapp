@@ -24,7 +24,7 @@
         <div class="panel panel-default">
             <!-- /.panel-heading -->
             <div class="panel-body">
-                <table width="100%" wt-responsive-table class="table table-striped table-hover" ng-table="vm.tableParams" show-filter="true">
+                <table width="100%" class="table table-striped table-hover" ng-table="vm.tableParams" show-filter="true">
                     <tr class="odd gradeX" ng-repeat="p in $data">
                         <td data-title="'No'" sortable="'propertyid'" class="text-center"><a href="" ng-click="viewProperty(p.propertyid)">{{ p.propertyid }}</a></td>
                         <td data-title="'Address 1'" filter="{'address1': 'text'}">{{ p.address1 }}</td>

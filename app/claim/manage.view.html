@@ -239,6 +239,7 @@
                                 <div ng-if="vm.workmessage" class="alert alert-success">{{vm.workmessage}}</div>
                             </div>
                         </div>
+                        <div class="text-center" ng-show="vm.workitems == null"><p>No Worklog history</p></div>
                         <ul class="timeline">
                             <li ng-class="timelineType($index)" ng-repeat="w in vm.workitems">
                                 <div class="timeline-badge"><i class="fa fa-check"></i>
@@ -365,10 +366,25 @@
     </div>
     <div class="col-lg-3" ng-show="isStaff()">
         <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-8">
+                        <h4 class="panel-title">
+                            <i class="fa fa-gear"></i> Actions
+                        </h4>
+                    </div>
+                </div>
+            </div>
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-lg-12">
-                        <button ng-disabled="vm.loading" class="btn btn-success btn-block btn-md" ng-click=""><i class="fa fa-check"></i> {{vm.claimaction}}</button>
+                    <div class="dropdown">
+                        <button class="btn btn-default btn-block dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {{vm.status.statusname}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" >
+                            <li ng-repeat="s in vm.statustypes track by s.statustypeid"><a href="" ng-click="vm.changestatus(s.statustypeid, s.statusname)">{{s.statusname}}</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>

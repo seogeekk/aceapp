@@ -18,6 +18,7 @@
         service.GetStatusTypes = GetStatusTypes;
         service.AssignClaim = AssignClaim;
         service.GetAssignment = GetAssignment;
+        service.ChangeStatus = ChangeStatus;
 
         var apiDomain = 'http://localhost:3000';
         var apiVersion = '/api/v1';
@@ -144,6 +145,21 @@
 
         function AssignClaim(ClaimDetails, callback) {
             $http.post(apiDomain + apiVersion + '/claim/assign', ClaimDetails, config)
+                .then( function (response) {
+                    var payload = response.data;
+                    if(payload.success) {
+                        callback(true);
+                    } else {
+                        // assigned to previous user
+                        callback(true);
+                    }
+                }, function(response) {
+                    callback(false,response);
+                });
+        }
+
+        function ChangeStatus(claimid, status, callback) {
+            $http.post(apiDomain + apiVersion + '/claim/status/', {claimid: claimid, status: status}, config)
                 .then( function (response) {
                     var payload = response.data;
                     if(payload.success) {

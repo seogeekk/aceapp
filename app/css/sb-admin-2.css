@@ -485,8 +485,8 @@ table.dataTable thead .sorting:after {
     margin: 0 auto;
     padding: .5em 0;
   }
-  .table td[data-header]:before {
-    content: attr(data-header);
+  .table td[data-title]:before {
+    content: attr(data-title);
     display: block;
     float: left;
     width: 50%;
@@ -494,7 +494,7 @@ table.dataTable thead .sorting:after {
     font-weight: bold;
     text-align: left;
   }
-  .table td[data-header] > * {
+  .table td[data-title] > * {
     display: block;
     width: 50%;
     float: right;
@@ -502,7 +502,7 @@ table.dataTable thead .sorting:after {
     padding-left: 1em;
     margin-top: 0;
   }
-  .table td[data-header]:after {
+  .table td[data-title]:after {
     content: "";
     position: absolute;
     left: 0;

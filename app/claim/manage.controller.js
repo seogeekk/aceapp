@@ -13,6 +13,7 @@
         vm.submitwork = submitwork;
         vm.assign = assign;
         vm.deleteAttachment = deleteAttachment;
+        vm.changestatus = changeStatus;
 
         // global variables
         vm.snapshot = false;
@@ -81,6 +82,10 @@
                 }
 
                 return false;
+            }
+
+            if ($scope.isStaff()) {
+                loadStaffRelated();
             }
 
             $scope.changeAssign=function() {
@@ -208,6 +213,32 @@
             $scope.stafflist=null;
         }
 
+        function loadStaffRelated() {
+
+            // Retrieve status types
+            ClaimService.GetStatusTypes()
+                .then(function(response) {
+                    if (response.constructor === Array) {
+                        vm.statustypes = response.filter(function(i) {
+                            return i.statustypeid>2;
+                        });
+                    }
+                })
+        }
+
+        function changeStatus(status, name) {
+            ClaimService.ChangeStatus(vm.claimid, status, function(results, response) {
+                if (results) {
+                    // update status
+                    vm.status.statusname = name;
+                    vm.status.statusid = status;
+                    return true;
+                } else {
+                    return false;
+                }
+            })
+        }
+
         function refreshStatusBar() {
             $scope.getStatusColor = function() {
                 // set bg-status
@@ -271,6 +302,10 @@
                         vm.staffassign = {username: undefined, staffname: 'Unassigned'};
                         return;
                     } else {
+                        // if status is open
+                        if (vm.status.statusid == 1) {
+                            changeStatus(2, 'Assigned');
+                        }
                         $scope.assignedit = false;
                     }
                 });
@@ -288,11 +323,9 @@
         }
 
         function worklogHistory() {
-
             WorklogService.GetWorkItems(vm.claimid)
                 .then(function(response) {
                     vm.workitems = response;
-                    console.log(response);
                 });
         }
 
