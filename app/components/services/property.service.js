@@ -14,6 +14,7 @@
         service.UpdateProperty = UpdateProperty;
         service.GetPropertyDetails = GetPropertyDetails;
         service.GetPropertyByCanonical = GetPropertyByCanonical;
+        service.GetAllProperties = GetAllProperties;
 
 
         var apiDomain = 'http://localhost:3000';
@@ -98,6 +99,21 @@
                     }
                 }, function(response) {
                     return null;
+                });
+        }
+
+        function GetAllProperties(callback) {
+            return $http.get(apiDomain + apiVersion + '/property/', config)
+                .then( function (response) {
+
+                    var payload = response.data;
+                    if(payload.success) {
+                        callback(true,payload.properties);
+                    } else {
+                        callback(false);
+                    }
+                }, function(response) {
+                    callback(false,response);
                 });
         }
 

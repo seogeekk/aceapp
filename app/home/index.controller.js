@@ -3,15 +3,24 @@
 
     angular
         .module('app')
-        .controller('Home.IndexController', Controller);
+        .controller('Home.IndexController', function($localStorage, $scope) {
+            var vm = this;
 
-    function Controller() {
-        var vm = this;
+            initController();
 
-        initController();
+            function initController() {
+                vm.username = $localStorage.currentUser.username;
+                vm.profilename = $localStorage.currentUser.firstname + ' ' + $localStorage.currentUser.lastname;
+                vm.roleid = $localStorage.currentUser.roleid;
+            }
 
-        function initController() {
+            $scope.isStaff=function() {
+                if (vm.roleid == 4) {
+                    return false;
+                }
+                return true;
+            }
+        });
 
-        }
-    }
+
 })();

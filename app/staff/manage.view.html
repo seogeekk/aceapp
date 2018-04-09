@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Property</title>
+</head>
+<body>
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Your Staff</h1>
+    </div>
+</div>
+
+<div class="row">
+
+        <div class="col-lg-9">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a ng-show="vm.staffid">Staff Detail</a>
+                        <a ng-hide="vm.staffid">Add New Staff</a>
+                    </h4>
+                </div>
+                <form role="form" name="form" ng-submit="form.$valid && vm.submit()" novalidate>
+                    <div class="panel-body">
+                        <div class="invisible"><input type="hidden" name="staffid" class="form-control" ng-model="vm.staffid"/></div>
+                        <div class="form-group row">
+                            <div class="col-xs-12">
+                                <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+                                <div ng-if="vm.alert" class="alert alert-success">{{vm.alert}}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row" ng-class="{ 'has-error': form.$submitted && form.username.$invalid }">
+                            <div class="col-xs-4">
+                                <label for="username">Username</label>
+                                <input type="text" name="username" class="form-control" ng-model="vm.staffusername" required />
+                                <div ng-messages="form.$submitted && form.username.$error" class="help-block">
+                                    <div ng-message="required">Username is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row" ng-hide="vm.staffid" >
+                            <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.usertype.$invalid }">
+                                <label for="usertype">Role</label>
+                                <ui-select name="usertype" ng-model="vm.usertype" title="Role">
+                                    <ui-select-match>
+                                        <span ng-bind="vm.usertype.usertypename"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="u in (vm.usertypes | filter: $select.search) track by u.usertypeid" ui-disable-choice="u.usertypename == 'Customer'">
+                                        <span ng-bind="u.usertypename"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <div ng-messages="form.$submitted && form.usertype.$error" class="help-block">
+                                    <div ng-message="required">Role is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': form.$submitted && form.firstname.$invalid }">
+                            <label for="firstname">First name</label>
+                            <input type="text" name="firstname" class="form-control" ng-model="vm.firstname" required />
+                            <div ng-messages="form.$submitted && form.firstname.$error" class="help-block">
+                                <div ng-message="required">First name is required</div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': form.$submitted && form.lastname.$invalid }">
+                            <label for="lastname">Last name</label>
+                            <input type="text" name="lastname" class="form-control" ng-model="vm.lastname" required />
+                            <div ng-messages="form.$submitted && form.lastname.$error" class="help-block">
+                                <div ng-message="required">Last name is required</div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': form.$submitted && form.email.$invalid }">
+                            <label for="email">Email</label>
+                            <input type="text" name="email" class="form-control" ng-model="vm.email" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" required />
+                            <div ng-messages="form.$submitted && form.email.$error" class="help-block">
+                                <div ng-message="pattern">Invalid email address</div>
+                                <div ng-message="required">Email is required</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.accesstype.$invalid }">
+                                <label for="accesstype">Access Type</label>
+                                <ui-select name="accesstype" ng-model="vm.accesstype" ng-disabled="notAdmin()" title="Access Type" ng-required="isStaff()">
+                                    <ui-select-match>
+                                        <span ng-bind="vm.accesstype.accesstypename"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="s in (vm.accesstypes | filter: $select.search) track by s.accesstypeid">
+                                        <span ng-bind="s.accesstypename"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <div ng-messages="form.$submitted && form.accesstype.$error" class="help-block">
+                                    <div ng-message="required">Access type is required</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5" ng-class="{ 'has-error': form.$submitted && form.department.$invalid }">
+                                <label for="department">Department</label>
+                                <ui-select name="department" ng-model="vm.department" ng-disabled="notAdmin()" title="Deparment" ng-required="isStaff()">
+                                    <ui-select-match>
+                                        <span ng-bind="vm.department.departmentname"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="d in (vm.departments | filter: $select.search) track by d.departmentid">
+                                        <span ng-bind="d.departmentname"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <div ng-messages="form.$submitted && form.department.$error" class="help-block">
+                                    <div ng-message="required">Department is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="btn-toolbar">
+                                <button ng-disabled="vm.loading" class="btn btn-success btn-circle btn-lg"><i class="fa fa-check"></i></button>
+                                <button type="button" ng-disabled="vm.loading" class="btn btn-danger btn-circle btn-lg" ng-click="hideForm()"><i class="fa fa-times"></i></button>
+                                <img ng-if="vm.loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+</div>
+</body>
+</html>

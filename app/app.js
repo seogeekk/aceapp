@@ -67,13 +67,13 @@ function config($stateProvider, $urlRouterProvider) {
                }
            }
        })
-       .state('customer', {
-           url: 'customer',
+       .state('profile', {
+           url: 'profile',
            parent: 'home',
            views: {
                'body@home': {
-                   templateUrl: 'customer/index.view.html',
-                   controller: 'Customer.IndexController',
+                   templateUrl: 'profile/index.view.html',
+                   controller: 'UserProfile.IndexController',
                    controllerAs: 'vm'
                }
            }
@@ -83,18 +83,41 @@ function config($stateProvider, $urlRouterProvider) {
            parent: 'home',
            views: {
                'body@home': {
-                   templateUrl: 'property/index.view.html'
+                   templateUrl: 'property/index.view.html',
+                   controller: 'Property.IndexController',
+                   controllerAs: 'vm'
                }
            }
        })
        .state('manageproperty', {
-           url: 'property/manage',
+           url: 'property/manage/:propertyid',
            parent: 'home',
-           params: { propertyid: null },
            views: {
                'body@home': {
                    templateUrl: 'property/manage.view.html',
                    controller: 'ManageProperty.IndexController',
+                   controllerAs: 'vm'
+               }
+           }
+       })
+       .state('staff', {
+           url: 'staff',
+           parent: 'home',
+           views: {
+               'body@home': {
+                   templateUrl: 'staff/index.view.html',
+                   controller: 'Staff.IndexController',
+                   controllerAs: 'vm'
+               }
+           }
+       })
+       .state('managestaff', {
+           url: 'staff/manage/:staffusername',
+           parent: 'home',
+           views: {
+               'body@home': {
+                   templateUrl: 'staff/manage.view.html',
+                   controller: 'ManageStaff.IndexController',
                    controllerAs: 'vm'
                }
            }

@@ -21,14 +21,19 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#addproperty" target="_self">Property Address</a>
+                            <a data-toggle="collapse" data-parent="#accordion" href="#addproperty" target="_self" ng-show="vm.propertyid">Property Address</a>
+                            <a data-toggle="collapse" data-parent="#accordion" href="#addproperty" target="_self" ng-hide="vm.propertyid">Add New Property</a>
                         </h4>
                     </div>
                     <div id="addproperty" class="panel-collapse collapse in">
                         <div class="panel-body">
                                 <div class="invisible"><input type="hidden" name="propertyid" class="form-control" ng-model="vm.propertyid"/></div>
                                 <div class="invisible"><input type="hidden" name="canonicalid" class="form-control" ng-model="vm.canonicalid"/></div>
-                                <div class="form-group row">
+                                <div class="form-group">
+                                    <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+                                    <div ng-if="vm.alertmessage" class="alert alert-success">{{vm.alertmessage}}</div>
+                                </div>
+                                <div class="form-group row" ng-show="isStaff()">
                                     <div class="col-lg-1">
                                         <label for="property">Search</label>
                                     </div>
@@ -96,63 +101,56 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.propertytype.$invalid }">
+                                        <label for="propertytype">Property Type</label>
+                                        <ui-select name="propertytype" ng-model="vm.propertytype" ng-disabled="isCustomer()" title="Property Type" required>
+                                            <ui-select-match>
+                                                <span ng-bind="vm.propertytype.propertytypename"></span>
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="p in (vm.propertytypes | filter: $select.search) track by p.propertytypeid">
+                                                <span ng-bind="p.propertytypename"></span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                        <div ng-messages="form.$submitted && form.propertytype.$error" class="help-block">
+                                            <div ng-message="required">Property type is required</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.ownername.$invalid }">
+                                        <label for="ownername">Owner Name</label>
+                                        <input type="text" name="address1" class="form-control" ng-model="vm.ownername" ng-disabled="isCustomer()"/>
+                                    </div>
+                                    <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.contact.$invalid }">
+                                        <label for="contact">Contact</label>
+                                        <input type="text" name="contact" class="form-control" ng-model="vm.contact" ng-disabled="isCustomer()" ng-pattern="/^(\+\d{1,3}[- ]?)?\d{10}$/"/>
+                                        <div ng-messages="form.$submitted && form.contact.$error" class="help-block">
+                                            <div ng-message="pattern">Invalid mobile number</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-show="isStaff()">
+                                    <div class="btn-toolbar">
+                                        <button ng-disabled="vm.loading" class="btn btn-success btn-circle btn-lg"><i class="fa fa-check"></i></button>
+                                        <button type="button" ng-disabled="vm.loading" class="btn btn-danger btn-circle btn-lg" ng-click="hideForm()"><i class="fa fa-times"></i></button>
+                                        <img ng-if="vm.loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                                    </div>
+                                </div>
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#ownership" target="_self">Property Details</a>
-                        </h4>
-                    </div>
-                    <div id="ownership" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <div class="form-group row">
-                                <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.propertytype.$invalid }">
-                                    <label for="propertytype">Property Type</label>
-                                    <ui-select name="propertytype" ng-model="vm.propertytype" ng-disabled="vm.disabled" title="Property Type" required>
-                                        <ui-select-match>
-                                            <span ng-bind="vm.propertytype.propertytypename"></span>
-                                        </ui-select-match>
-                                        <ui-select-choices repeat="p in (vm.propertytypes | filter: $select.search) track by p.propertytypeid">
-                                            <span ng-bind="p.propertytypename"></span>
-                                        </ui-select-choices>
-                                    </ui-select>
-                                    <div ng-messages="form.$submitted && form.propertytype.$error" class="help-block">
-                                        <div ng-message="required">Property type is required</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.ownername.$invalid }">
-                                    <label for="ownername">Owner Name</label>
-                                    <input type="text" name="address1" class="form-control" ng-model="vm.ownername"/>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.contact.$invalid }">
-                                    <label for="contact">Contact</label>
-                                    <input type="text" name="contact" class="form-control" ng-model="vm.contact" ng-pattern="/^(\+\d{1,3}[- ]?)?\d{10}$/"/>
-                                    <div ng-messages="form.$submitted && form.contact.$error" class="help-block">
-                                        <div ng-message="pattern">Invalid mobile number</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
 
         </div>
         <div class="col-lg-3">
             <div class="col-lg-12">
-                <button ng-disabled="vm.loading" class="btn btn-lg btn-success btn-block">Save</button>
-                <img ng-if="vm.loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+
             </div>
             <div class="form-group">&nbsp;</div>
             <div class="col-lg-12">
-                <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
-                <div ng-if="vm.alertmessage" class="alert alert-success">{{vm.alertmessage}}</div>
+
             </div>
 
         </div>

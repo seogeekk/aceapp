@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer</title>
+</head>
+<body>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Your Profile</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group row">
+                        <div class="col-xs-12">
+                            <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+                            <div ng-if="vm.alert" class="alert alert-success">{{vm.alert}}</div>
+                        </div>
+                    </div>
+                    <form role="form" name="form" ng-submit="form.$valid && vm.submit()" novalidate>
+                        <div class="invisible"><input type="hidden" name="profileid" class="form-control" ng-model="vm.profileid"/></div>
+                        <div class="form-group row" ng-class="{ 'has-error': form.$submitted && form.username.$invalid }">
+                            <div class="col-xs-4">
+                                <label for="username">Username</label>
+                                <input type="text" name="username" class="form-control input-sm" ng-model="vm.username" required ng-disabled="true"/>
+                                <div ng-messages="form.$submitted && form.username.$error" class="help-block">
+                                    <div ng-message="required">Username is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-xs-6" ng-class="{ 'has-error': form.$submitted && form.profilename.$invalid }">
+                                <label for="profilename">Profile name</label>
+                                <input type="text" name="profilename" class="form-control" ng-model="vm.profilename" required ng-disabled="true"/>
+                                <div ng-messages="form.$submitted && form.profilename.$error" class="help-block">
+                                    <div ng-message="required">Profile name is required</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4" ng-show="isCustomer()" ng-class="{ 'has-error': form.$submitted && form.custtype.$invalid }">
+                                <label for="custtype">Customer Type</label>
+                                <ui-select name="custtype" ng-model="vm.custtype" title="Customer Type" ng-required="isCustomer()">
+                                    <ui-select-match>
+                                        <span ng-bind="vm.custtype.custtypename"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="c in (vm.custtypes | filter: $select.search) track by c.custtypeid">
+                                        <span ng-bind="c.custtypename"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <div ng-messages="form.$submitted && form.custtype.$error" class="help-block">
+                                    <div ng-message="required">Customer type is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-xs-4" ng-show="isStaff()" ng-class="{ 'has-error': form.$submitted && form.accesstype.$invalid }">
+                                <label for="accesstype">Access Type</label>
+                                <ui-select name="accesstype" ng-model="vm.accesstype" ng-disabled="notAdmin()" title="Access Type" ng-required="isStaff()">
+                                    <ui-select-match>
+                                        <span ng-bind="vm.accesstype.accesstypename"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="s in (vm.accesstypes | filter: $select.search) track by s.accesstypeid">
+                                        <span ng-bind="s.accesstypename"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <div ng-messages="form.$submitted && form.accesstype.$error" class="help-block">
+                                    <div ng-message="required">Access type is required</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4" ng-show="isStaff()" ng-class="{ 'has-error': form.$submitted && form.department.$invalid }">
+                                <label for="department">Department</label>
+                                <ui-select name="department" ng-model="vm.department" ng-disabled="notAdmin()" title="Deparment" ng-required="isStaff()">
+                                    <ui-select-match>
+                                        <span ng-bind="vm.department.departmentname"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="d in (vm.departments | filter: $select.search) track by d.departmentid">
+                                        <span ng-bind="d.departmentname"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <div ng-messages="form.$submitted && form.department.$error" class="help-block">
+                                    <div ng-message="required">Department is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-xs-10" ng-show="isCustomer()" ng-class="{ 'has-error': form.$submitted && form.property.$invalid }">
+                                <label for="address">Address</label>
+
+                                <input type="text" name="property" ng-model="vm.property" ng-keyup="complete(vm.property)" class="form-control"/>
+                                <ul class="list-group">
+                                    <li class="list-group-item" ng-repeat="address in addresslist" ng-click="fillTextbox(address)">{{address}}</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-xs-10" ng-class="{ 'has-error': form.$submitted && form.mobile.$invalid }">
+                                <label for="mobile">Mobile Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">+61</span>
+                                    <input type="text" name="mobile" class="form-control" ng-model="vm.mobile" ng-pattern="/^\d{9}$/" />
+                                </div>
+                                <div ng-messages="form.$submitted && form.mobile.$error" class="help-block">
+                                    <div ng-message="pattern">Mobile number is invalid</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-xs-10" ng-class="{ 'has-error': form.$submitted && form.email.$invalid }">
+                                <label for="email">Email Address</label>
+                                <input type="text" name="email" class="form-control" ng-model="vm.email" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" required/>
+                                <div ng-messages="form.$submitted && form.email.$error" class="help-block">
+                                    <div ng-message="required">Email address is required</div>
+                                    <div ng-message="pattern">Email address is invalid</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="btn-toolbar">
+                                <button ng-disabled="vm.loading" class="btn btn-success btn-circle btn-lg"><i class="fa fa-check"></i></button>
+                                <button type="button" ng-disabled="vm.loading" class="btn btn-danger btn-circle btn-lg" ng-click="hideForm()"><i class="fa fa-times"></i></button>
+                                <img ng-if="vm.loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

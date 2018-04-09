@@ -57,7 +57,7 @@
 
                     return payload.address;
                 }, function(response) {
-                    return null;
+                    return {success: false};
                 });
         }
     }

@@ -5,12 +5,14 @@
         .module('app')
         .controller('ManageClaim.IndexController', Controller);
 
-    function Controller($scope, $state, $location, $stateParams, $localStorage, ClaimService, AddressService, PropertyService, WorklogService, $timeout) {
+    function Controller($scope, $state, $location, $stateParams, $localStorage, ClaimService, AddressService, PropertyService, WorklogService, StaffService, $timeout) {
         var vm = this;
 
         // functions
         vm.submit = submit;
         vm.submitwork = submitwork;
+        vm.assign = assign;
+        vm.deleteAttachment = deleteAttachment;
 
         // global variables
         vm.snapshot = false;
@@ -53,21 +55,36 @@
                             vm.postcode = response.property.postcode;
                             vm.country = response.property.country;
                             vm.propertytype = {propertytypename: response.property.propertytype.name, propertytypeid: response.property.propertytype.typeid};
-
                             // other
                             vm.status = {statusname: response.status.statusname, statusid: response.status.statusid};
 
                             // Set form flags
                             vm.editflag = false;
                             vm.snapshot = true;
+                            refreshStatusBar();
+                        } else {
+                            alert("Claim not found!");
+                            $state.go("request");
                         }
                     });
 
-                console.log(vm.claimid);
                 worklogHistory();
+                populateAssignee();
             } else {
                 // This assumes it is a new claim
                 vm.editflag = true;
+            }
+
+            $scope.isStaff = function() {
+                if (vm.roleid != 4) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            $scope.changeAssign=function() {
+                $scope.assignedit = true;
             }
 
             $scope.toggleEdit = function() {
@@ -90,18 +107,41 @@
 
             $scope.showWorkForm = function() {
                 vm.workaddflag = true;
+                vm.workitemid = '';
+                $scope.uploadflag = true;
+                vm.attachid = '';
+                vm.attachmentfile = '';
+            }
+
+            $scope.editWorkForm = function(workitem) {
+                vm.workaddflag = true;
+                vm.workitemid = workitem.workitemid;
+                vm.inspectiondate = '';
+                vm.worklogdesc = workitem.description;
+                vm.worktype = {worktypename: workitem.worktype.name, worktypetypeid: workitem.worktype.typeid };
+                vm.worknotes = workitem.notes;
+                if (workitem.attachment.itemid) {
+                    vm.attachid = workitem.attachment.itemid;
+                    vm.attachmentfile = workitem.attachment.attachment;
+                    // do not show upload
+                    $scope.uploadflag = false;
+                } else {
+                    $scope.uploadflag = true;
+                }
+                vm.workerror = '';
+                $scope.onWorkType();
             }
 
             $scope.hideWorkForm = function() {
                 vm.workaddflag = false;
-                vm.worksummary = '';
+                vm.worklogdesc = '';
+                vm.inspectiondate = '';
                 vm.worktype = '';
                 vm.worknotes = '';
                 vm.attachment = '';
                 vm.workerror = '';
             }
 
-            vm.claimtypes = [];
             ClaimService.GetClaimTypes()
                 .then(function(response) {
                     if (response.constructor === Array) {
@@ -109,7 +149,6 @@
                     }
                 });
 
-            vm.worktypes = [];
             WorklogService.GetWorkTypes()
                 .then(function(response) {
                     if (response.constructor === Array) {
@@ -158,15 +197,115 @@
             }
         };
 
+        $scope.getStaff=function(string){
+            StaffService.SearchStaff(string)
+                .then(function(response) {
+                    $scope.stafflist=response;
+                });
+        }
+        $scope.fillStaff=function(string){
+            vm.staffassign=string;
+            $scope.stafflist=null;
+        }
+
+        function refreshStatusBar() {
+            $scope.getStatusColor = function() {
+                // set bg-status
+                if (vm.status.statusid == 8 || vm.status.statusid == 9) {
+                    return 'progress-bar-danger';
+                } else if (vm.status.statusid == 1) {
+                    return 'progress-bar-info';
+                } else if (vm.status.statusid == 7) {
+                    return 'progress-bar-success';
+                } else {
+                    return 'progress-bar-warning';
+                }
+            }
+
+            $scope.getPercentage=function() {
+                if (vm.status.statusid == 8 || vm.status.statusid == 9) {
+                    return 100;
+                } else if (vm.status.statusid == 1) {
+                    return 10;
+                } else if (vm.status.statusid == 7) {
+                    return 100;
+                } else {
+                    return vm.status.statusid*10;
+                }
+            }
+        };
+
+        function deleteAttachment() {
+
+            WorklogService.DeleteAttachment(vm.workitemid, vm.attachid)
+                .then(function(response) {
+                    if (response) {
+                        // delete
+                        vm.attachid = '';
+                        vm.attachmentfile = '';
+                        worklogHistory();
+                        $scope.uploadflag = true;
+                    } else {
+                        vm.workerror = 'Something went wrong!';
+                    }
+                });
+
+        };
+
+        /*
+            This is for the assignment of ticket
+         */
+        function assign() {
+            $scope.stafflist = '';
+            if (! vm.staffassign.username) {
+                vm.staffassign = {username: undefined, staffname: 'Unassigned'};
+            } else {
+                var ClaimDetails = {
+                    claimid: vm.claimid,
+                    username: vm.staffassign.username,
+                    auditwho: vm.username
+                }
+
+                ClaimService.AssignClaim(ClaimDetails, function(results, response){
+                    if (results == false) {
+                        vm.staffassign = {username: undefined, staffname: 'Unassigned'};
+                        return;
+                    } else {
+                        $scope.assignedit = false;
+                    }
+                });
+            }
+        }
+
+        function populateAssignee() {
+            // get from backend
+            vm.staffassign = {username: undefined, staffname: 'Unassigned'};
+            ClaimService.GetAssignment(vm.claimid, function(error, response){
+                if (response) {
+                    vm.staffassign = {username: response.username, staffname: response.staffname};
+                }
+            })
+        }
+
         function worklogHistory() {
 
-            vm.workitems = [];
             WorklogService.GetWorkItems(vm.claimid)
                 .then(function(response) {
                     vm.workitems = response;
                     console.log(response);
                 });
         }
+
+        $scope.checkWorkList=function (worktypeid) {
+            if (worktypeid == 3) {
+                if (!$scope.isStaff()) {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        }
+
         function submit() {
             vm.loading = true;
 
@@ -296,6 +435,16 @@
 
         };
 
+        // WorkType
+        $scope.onWorkType=function(){
+            if (vm.worktype.worktypetypeid == 3) {
+                //
+                $scope.isServiceLog = true;
+            } else {
+                $scope.isServiceLog = false;
+            }
+        }
+
         function callCreateClaim(ClaimDetails) {
             console.log(ClaimDetails);
             ClaimService.CreateClaim(ClaimDetails, function(results, response) {
@@ -340,6 +489,9 @@
 
         function submitwork() {
 
+            vm.loading=true;
+            vm.workerror = '';
+
             var WorklogDetails = {
                 worklogid: vm.claimid,
                 description: vm.summary,
@@ -350,22 +502,45 @@
 
             if(vm.workitemid) {
                 // this is an update, check if it does exists
-                WorklogService.WorklogExists(workitemid)
-                    .then(function(response) {
-                        var workitemid = response;
+                WorklogDetails.workitemid = vm.workitemid;
+                WorklogService.UpdateWorklog(WorklogDetails, vm.attachment, function(result, response) {
 
-                        if(workitemid) {
-                            //WorklogService.UpdateWorklog
+                    if(result) {
+                        if (response) {
+                            vm.loading = false;
+                            vm.workmessage = 'Worklog updated';
+                            $timeout(function() {
+                                vm.workmessage = undefined;
+                            }, 3000);
+                            worklogHistory();
+                            $scope.hideWorkForm();
+                        } else {
+                            vm.loading = false;
+                            vm.workerror = 'Error updating worklog';
                         }
-                    })
+                    } else {
+                        console.log(response);
+                        vm.loading = false;
+                        vm.workerror = 'Error updating worklog';
+                    }
+                });
+
             } else {
                 WorklogService.CreateWorklog(WorklogDetails, vm.attachment, function(result, response) {
-                    if(result) {
 
+                    if(result) {
                         if (response) {
-                            console.log(payload);
+                            vm.workitemid = response;
                             vm.loading = false;
                             vm.workmessage = 'Added worklog';
+                            $timeout(function() {
+                                vm.workmessage = undefined;
+                            }, 3000);
+                            worklogHistory();
+                            $scope.hideWorkForm();
+                        } else {
+                            vm.loading = false;
+                            vm.workerror = 'Error adding worklog';
                         }
                     } else {
                         console.log(response);

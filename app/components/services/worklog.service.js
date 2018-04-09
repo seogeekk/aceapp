@@ -5,7 +5,7 @@
         .module('app')
         .factory('WorklogService', Service);
 
-    function Service($http, $localStorage, Upload) {
+    function Service($http, $localStorage) {
         var service = {};
 
         service.GetWorkItems = GetWorkItems;
@@ -13,6 +13,7 @@
         service.CreateWorklog = CreateWorklog;
         service.WorklogExists = WorklogExists;
         service.UpdateWorklog = UpdateWorklog;
+        service.DeleteAttachment = DeleteAttachment;
 
         var apiDomain = 'http://localhost:3000';
         var apiVersion = '/api/v1';
@@ -71,7 +72,9 @@
         function CreateWorklog(WorklogDetails, attachment, callback) {
 
             var form = new FormData();
-            form.append('attachment', attachment);
+            if (attachment) {
+                form.append('attachment', attachment);
+            }
 
             for ( var key in WorklogDetails ) {
                 form.append(key, WorklogDetails[key]);
@@ -86,12 +89,10 @@
                 transformRequest: angular.identity
             };
 
-            console.log(config);
-            return $http.post(apiDomain + apiVersion + '/worklog/new', form, config)
+            $http.post(apiDomain + apiVersion + '/worklog/new', form, config)
                 .then( function (response) {
-                    // login successful if there's a token in the reponse
-                    console.log(response);
-                    var payload = response.data;
+
+                    var payload = JSON.parse(response.data);
                     if(payload.success) {
                         callback(true,payload.workitem);
                     } else {
@@ -102,10 +103,12 @@
                 });
         }
 
-        function UpdateWorklog(WorklogDetails, callback) {
+        function UpdateWorklog(WorklogDetails, attachment, callback) {
 
             var form = new FormData();
-            form.append('attachment', attachment);
+            if (attachment) {
+                form.append('attachment', attachment);
+            }
 
             for ( var key in WorklogDetails ) {
                 form.append(key, WorklogDetails[key]);
@@ -120,10 +123,11 @@
                 transformResponse: angular.identity
             };
 
-            return $http.post(apiDomain + apiVersion + '/worklog/update', form, config)
+            $http.post(apiDomain + apiVersion + '/worklog/update', form, config)
                 .then( function (response) {
                     // login successful if there's a token in the reponse
-                    var payload = response.data;
+                    var payload = JSON.parse(response.data);
+
                     if(payload.success) {
                         callback(true,payload.workitem);
                     } else {
@@ -147,6 +151,22 @@
                     }
                 }, function(response) {
                     return null;
+                });
+        }
+
+        function DeleteAttachment(workitemid, itemid) {
+            return $http.post(apiDomain + apiVersion + '/worklog/upload/delete', {workitemid: workitemid, itemid: itemid}, config)
+                .then( function (response) {
+
+                    var payload = response.data;
+
+                    if(payload.success) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }, function(response) {
+                    return false;
                 });
         }
 

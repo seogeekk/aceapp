@@ -31,9 +31,12 @@
                 if (result == true) {
                     $location.path('/');
                 } else {
-                    console.log(response);
+                    var code = null;
+                    if (response) {
+                        code = response.code
+                    }
                     // Return callback error
-                    if(response.code == 'ER_DUP_ENTRY') {
+                    if(code == 'ER_DUP_ENTRY') {
                         vm.error = 'Username already taken';
                     } else {
                         vm.error = 'Something went wrong';

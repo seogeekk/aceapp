@@ -22,10 +22,11 @@
     <!-- Custom Fonts -->
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-    <link href="bower_components/ng-table-bundle/ng-table.css" rel="stylesheet">
+
     <link href="bower_components/angular-bootstrap/ui-bootstrap-csp.css" rel="stylesheet">
     <link href="bower_components/angular-ui-select/dist/select.css" rel="stylesheet">
-
+    <link href="bower_components/angular-responsive-tables/release/angular-responsive-tables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -62,6 +63,9 @@
 <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
 <script src="bower_components/angular-ui-select/dist/select.js"></script>
 <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
+<script src="/bower_components/moment/min/moment.min.js"></script>
+<script src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+
 
 <!-- application scripts -->
 <script src="app.js"></script>
@@ -73,13 +77,18 @@
 <script src="components/services/property.service.js"></script>
 <script src="components/services/claim.service.js"></script>
 <script src="components/services/worklog.service.js"></script>
+<script src="components/services/staff.service.js"></script>
+<script src="components/services/user.service.js"></script>
 <script src="home/index.controller.js"></script>
 <script src="login/index.controller.js"></script>
 <script src="signup/index.controller.js"></script>
 <script src="claim/index.controller.js"></script>
-<script src="customer/index.controller.js"></script>
+<script src="profile/index.controller.js"></script>
 <script src="property/manage.controller.js"></script>
+<script src="property/index.controller.js"></script>
 <script src="claim/manage.controller.js"></script>
+<script src="staff/manage.controller.js"></script>
+<script src="staff/index.controller.js"></script>
 
 
 </body>

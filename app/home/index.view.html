@@ -21,12 +21,12 @@
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
-                <li class="dropdown">
+                <!--<li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-messages">
-                        <!--<li>
+                        &lt;!&ndash;<li>
                             <a href="#">
                                 <div>
                                     <strong>John Smith</strong>
@@ -67,17 +67,17 @@
                                 <strong>Read All Messages</strong>
                                 <i class="fa fa-angle-right"></i>
                             </a>
-                        </li>-->
+                        </li>&ndash;&gt;
                     </ul>
-                    <!-- /.dropdown-messages -->
+                    &lt;!&ndash; /.dropdown-messages &ndash;&gt;
                 </li>
-                <!-- /.dropdown -->
+                &lt;!&ndash; /.dropdown &ndash;&gt;
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-tasks">
-                        <!--<li>
+                        &lt;!&ndash;<li>
                             <a href="#">
                                 <div>
                                     <p>
@@ -146,17 +146,17 @@
                                 <strong>See All Tasks</strong>
                                 <i class="fa fa-angle-right"></i>
                             </a>
-                        </li>-->
+                        </li>&ndash;&gt;
                     </ul>
-                    <!-- /.dropdown-tasks -->
+                    &lt;!&ndash; /.dropdown-tasks &ndash;&gt;
                 </li>
-                <!-- /.dropdown -->
+                &lt;!&ndash; /.dropdown &ndash;&gt;
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-alerts">
-                        <!--<li>
+                        &lt;!&ndash;<li>
                             <a href="#">
                                 <div>
                                     <i class="fa fa-comment fa-fw"></i> New Comment
@@ -206,17 +206,23 @@
                                 <strong>See All Alerts</strong>
                                 <i class="fa fa-angle-right"></i>
                             </a>
-                        </li>-->
+                        </li>&ndash;&gt;
                     </ul>
-                    <!-- /.dropdown-alerts -->
-                </li>
+                    &lt;!&ndash; /.dropdown-alerts &ndash;&gt;
+                </li>-->
                 <!-- /.dropdown -->
+                <li class="dropdown">
+                    &nbsp;
+                </li>
+                <li class="dropdown">
+                    <p><strong>Hello {{vm.profilename}}</strong></p>
+                </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#!/customer"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        <li><a href="#!/profile"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
                         <li><a href=""><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
@@ -242,10 +248,10 @@
                         <li>
                             <a href="#!/property"><i class="fa fa-home fa-fw"></i> Properties</a>
                         </li>
-                        <li ng-show="vm.adminuser">
+                        <li ng-show="isStaff()">
                             <a href="#!/staff"><i class="fa fa-user fa-fw"></i> Staff</a>
                         </li>
-                        <li ng-show="vm.adminuser">
+                        <li ng-show="isStaff()">
                             <a href="#!/reports"><i class="fa fa-list-alt fa-fw"></i> Reports</a>
                         </li>
                     </ul>

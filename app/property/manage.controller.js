@@ -5,7 +5,7 @@
         .module('app')
         .controller('ManageProperty.IndexController', Controller);
 
-    function Controller($scope, $location, $stateParams, $localStorage, CustomerService, AddressService, PropertyService, $timeout) {
+    function Controller($scope, $location, $state, $stateParams, $localStorage, CustomerService, AddressService, PropertyService, $timeout) {
         var vm = this;
 
         vm.submit = submit;
@@ -21,12 +21,27 @@
             vm.custname = $localStorage.currentUser.firstname + ' ' + $localStorage.currentUser.lastname;
             vm.roleid = $localStorage.currentUser.roleid;
 
+            $scope.isStaff=function() {
+                if (vm.roleid == 4) {
+                    return false;
+                }
+                return true;
+            }
+
+            $scope.isCustomer=function() {
+                if(vm.roleid == 4) {
+                    return true;
+                }
+                return false;
+            }
             // Fill in PropertyDetails
             // If it's update else / Create New
             if ($stateParams.propertyid) {
-                PropertyService.GetPropertyDetails($stateParams.propertyid)
+                vm.propertyid = $stateParams.propertyid;
+                PropertyService.GetPropertyDetails(vm.propertyid)
                     .then(function (response) {
                         if(response) {
+                            vm.propertyid = response.propertyid;
                             vm.canonicalid = response.canonicalid;
                             vm.property = response.address1 + ' ' + response.address2 + ' ' + response.suburb + ' ' + response.state + ' ' + response.postcode;
                             vm.addressone = response.address1;
@@ -34,11 +49,19 @@
                             vm.suburb = response.suburb;
                             vm.state = response.state;
                             vm.postcode = response.postcode;
+                            vm.country = response.country;
                             vm.propertytype = {propertytypename: response.propertytype.name, propertytypeid: response.propertytype.typeid};
+                        } else {
+                            alert("Property not found!");
+                            $state.go("property");
                         }
                     });
+            } else {
+                // Redirect customer
+                if ($scope.isCustomer()) {
+                    $state.go("property");
+                }
             }
-
 
             vm.custtypes = [];
             PropertyService.GetPropertyTypes()
@@ -80,8 +103,13 @@
                         vm.searcherror = "Address not found";
                     });
             }
+
+
         };
 
+        $scope.hideForm=function() {
+            $state.go("property");
+        }
         function submit() {
             vm.loading = true;
 
@@ -96,8 +124,8 @@
                         var PropertyDetails = {
                             propertyid: propertyid,
                             property_canonical_id: vm.canonicalid,
-                            address1: vm.address1,
-                            address2: vm.address2,
+                            address1: vm.addressone,
+                            address2: vm.addresstwo,
                             suburb: vm.suburb,
                             state: vm.state,
                             postcode: vm.postcode,

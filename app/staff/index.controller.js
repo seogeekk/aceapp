@@ -3,7 +3,7 @@
 
     angular
         .module('app')
-        .controller('Claim.IndexController', function(ClaimService, $scope, $state, $filter, $localStorage, NgTableParams){
+        .controller('Staff.IndexController', function(StaffService, $scope, $state, $filter, $localStorage, NgTableParams){
 
             var vm = this;
             initController();
@@ -11,24 +11,21 @@
             function initController() {
                 // Initialise variables
                 vm.username = $localStorage.currentUser.username;
-                vm.custname = $localStorage.currentUser.firstname + ' ' + $localStorage.currentUser.lastname;
+                vm.profilename = $localStorage.currentUser.firstname + ' ' + $localStorage.currentUser.lastname;
                 vm.roleid = $localStorage.currentUser.roleid;
 
-                $scope.isCustomer=function() {
-                    if (vm.roleid == 4) {
+                $scope.isAdmin=function() {
+                    if(vm.roleid ==1) {
                         return true;
                     }
                     return false;
                 }
 
-                $scope.isStaff=function() {
-                    if(vm.roleid ==4) {
-                        return false;
-                    }
-                    return true;
+                if(! $scope.isAdmin()) {
+                    $state.go("home");
                 }
 
-                ClaimService.GetAllClaims(function(result, data) {
+                StaffService.GetAllStaff(function(result, data) {
 
                     if(result == false) {
                         data = [];
@@ -39,16 +36,9 @@
                             dataset: data
                         });
                     } else {
-                        var filter = {
-                            submitteduser: undefined
-                        }
-                        if($scope.isCustomer()) {
-                            filter.submitteduser = vm.username
-                        }
                         vm.tableParams = new NgTableParams({
                             page: 1,
-                            count: 25,
-                            filter: filter
+                            count: 25
                         }, {
                             dataset: data
                         });
@@ -56,38 +46,38 @@
                 });
 
 
-                $scope.viewClaim = function(claimid) {
-                    $state.go('managerequest', { claimid: claimid });
+                $scope.viewStaff = function(staffusername) {
+                    $state.go('managestaff', { staffusername: staffusername });
                 }
 
-                $scope.getCTypes = function() {
-                    return ClaimService.GetClaimTypes()
+                $scope.getDTypes = function() {
+                    return StaffService.GetDeparments()
                         .then(function(response) {
 
                             if(response) {
-                                var claimtypes = [];
+                                var departments = [];
                                 for (var i = 0; i < response.length; i++) {
-                                    var item = { id: response[i].claimtypeid, title: response[i].claimtypename };
-                                    claimtypes.push(item);
+                                    var item = { id: response[i].departmentid, title: response[i].departmentname };
+                                    departments.push(item);
                                 }
-                                return claimtypes;
+                                return departments;
                             } else {
                                 return null;
                             }
                         });
                 }
 
-                $scope.getSTypes = function() {
-                    return ClaimService.GetStatusTypes()
+                $scope.getATypes = function() {
+                    return StaffService.GetAccessTypes()
                         .then(function(response) {
 
                             if(response) {
-                                var statustypes = [];
+                                var accesstypes = [];
                                 for (var i = 0; i < response.length; i++) {
-                                    var item = { id: response[i].statustypeid, title: response[i].statusname };
-                                    statustypes.push(item);
+                                    var item = { id: response[i].accesstypeid, title: response[i].accesstypename };
+                                    accesstypes.push(item);
                                 }
-                                return statustypes;
+                                return accesstypes;
                             } else {
                                 return null;
                             }

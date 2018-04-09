@@ -16,6 +16,8 @@
         service.GetClaimTypes = GetClaimTypes;
         service.GetClaimDetails = GetClaimDetails;
         service.GetStatusTypes = GetStatusTypes;
+        service.AssignClaim = AssignClaim;
+        service.GetAssignment = GetAssignment;
 
         var apiDomain = 'http://localhost:3000';
         var apiVersion = '/api/v1';
@@ -51,13 +53,27 @@
                 .then( function (response) {
 
                     var payload = response.data;
-                    if(payload.claims.length > 0) {
-                       callback(payload.claims);
+                    if(payload.success) {
+                       callback(true, payload.claims);
                     } else {
-                        callback(null);
+                        callback(false, null);
                     }
                 }, function(response) {
-                    callback(null);
+                    callback(false, response.error);
+                });
+        }
+
+        function GetAssignment(claimid, callback) {
+            $http.get(apiDomain + apiVersion + '/claim/assign/' + claimid, config)
+                .then( function (response) {
+                    var payload = response.data;
+                    if(payload.success) {
+                        callback(true, payload.staff);
+                    } else {
+                        callback(false, null);
+                    }
+                }, function(response) {
+                    callback(false, response.error);
                 });
         }
 
@@ -120,6 +136,21 @@
                         callback(true,payload.claim);
                     } else {
                         callback(false);
+                    }
+                }, function(response) {
+                    callback(false,response);
+                });
+        }
+
+        function AssignClaim(ClaimDetails, callback) {
+            $http.post(apiDomain + apiVersion + '/claim/assign', ClaimDetails, config)
+                .then( function (response) {
+                    var payload = response.data;
+                    if(payload.success) {
+                        callback(true);
+                    } else {
+                        // assigned to previous user
+                        callback(true);
                     }
                 }, function(response) {
                     callback(false,response);
