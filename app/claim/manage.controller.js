@@ -3,6 +3,33 @@
 
     angular
         .module('app')
+        .directive('datePicker', function () {
+        return {
+            require: 'ngModel',
+            link: function (scope, element, attr, ngModel) {
+
+                $(element).datetimepicker({defaultDate: false, minDate: new Date()});
+
+                $(element).on("dp.change", function (e) {
+                    ngModel.$setViewValue = e.date;
+                    ngModel.$commitViewValue();
+                });
+            }
+        };
+        })
+        .directive('datePickerInput', function() {
+            return {
+                require: 'ngModel',
+                link: function (scope, element, attr, ngModel) {
+                    // Trigger the Input Change Event, so the Datepicker gets refreshed
+                    scope.$watch(attr.ngModel, function (value) {
+                        if (value) {
+                            element.trigger("change");
+                        }
+                    });
+                }
+            };
+        })
         .controller('ManageClaim.IndexController', Controller);
 
     function Controller($scope, $state, $location, $stateParams, $localStorage, ClaimService, AddressService, PropertyService, WorklogService, StaffService, $timeout) {
@@ -46,6 +73,7 @@
                             vm.description = response.description;
                             vm.submitteddate = response.submitteddate;
                             vm.submitteduser = response.submitteduser;
+                            vm.submittedname = response.submittedname;
                             // property related
                             vm.canonicalid = response.property.property_canonical_id;
                             vm.property = response.property.address1 + ' ' + response.property.address2 + ' ' + response.property.suburb + ' ' + response.property.state + ' ' + response.property.postcode;
@@ -80,7 +108,6 @@
                 if (vm.roleid != 4) {
                     return true;
                 }
-
                 return false;
             }
 
@@ -111,6 +138,7 @@
             }
 
             $scope.showWorkForm = function() {
+                $scope.onWorkType();
                 vm.workaddflag = true;
                 vm.workitemid = '';
                 $scope.uploadflag = true;
@@ -133,6 +161,10 @@
                 } else {
                     $scope.uploadflag = true;
                 }
+                // Inspection related
+                vm.inspectiondate = new Date(workitem.inspection.inspectiondate);
+                vm.inspectionid = workitem.inspection.inspectionid;
+
                 vm.workerror = '';
                 $scope.onWorkType();
             }
@@ -141,6 +173,7 @@
                 vm.workaddflag = false;
                 vm.worklogdesc = '';
                 vm.inspectiondate = '';
+                vm.inspectionid = '';
                 vm.worktype = '';
                 vm.worknotes = '';
                 vm.attachment = '';
@@ -330,7 +363,7 @@
         }
 
         $scope.checkWorkList=function (worktypeid) {
-            if (worktypeid == 3) {
+            if (worktypeid == 2 || worktypeid == 3) {
                 if (!$scope.isStaff()) {
                     return true;
                 }
@@ -470,12 +503,17 @@
 
         // WorkType
         $scope.onWorkType=function(){
-            if (vm.worktype.worktypetypeid == 3) {
-                //
-                $scope.isServiceLog = true;
+            if (vm.worktype) {
+                if (vm.worktype.worktypetypeid == 2) {
+                    //
+                    $scope.isInspection = true;
+                } else {
+                    $scope.isInspection = false;
+                }
             } else {
-                $scope.isServiceLog = false;
+                $scope.isInspection = false;
             }
+
         }
 
         function callCreateClaim(ClaimDetails) {
@@ -529,6 +567,8 @@
                 worklogid: vm.claimid,
                 description: vm.summary,
                 worktype: vm.worktype.worktypetypeid,
+                inspectiondate: vm.inspectiondate,
+                inspectionid: vm.inspectionid,
                 notes: vm.worknotes,
                 username: vm.username
             };

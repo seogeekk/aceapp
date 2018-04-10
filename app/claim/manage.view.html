@@ -131,6 +131,14 @@
                             <p>{{vm.description}}</p>
                         </div>
                     </div>
+                    <div class="row" ng-show="isStaff()">
+                        <div class="col-xs-4">
+                            <p><strong>Submitted</strong></p>
+                        </div>
+                        <div class="col-xs-8">
+                            <p>{{vm.submittedname}}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -247,13 +255,21 @@
                                 <div class="timeline-panel">
                                     <div class="timeline-heading">
                                         <h4 class="timeline-title">{{w.description}}</h4>
+                                        <p><small class="text-muted text-info"><i class="fa fa-clock-o"></i> created: {{w.creationdate | date: "medium"}}</small></p>
                                     </div>
                                     <div class="timeline-body">
                                         <p>{{w.notes}}</p>
+                                        <!-- Inspection related -->
+                                        <span ng-show="w.inspection.inspectionid">
+                                            <p><i class="fa fa-calendar"></i> Inspection on {{w.inspection.inspectiondate | date: "medium"}}</p>
+                                            <p ng-show="w.inspection.response.code == 1"><i class="fa fa-check-circle"></i> Accepted</p>
+                                            <p ng-show="w.inspection.response.code == 0"><i class="fa fa-times-circle"></i> Rejected</p>
+                                            <p ng-show="w.inspection.response.code == null"><i class="fa fa-question-circle"></i> No Response</p>
+                                        </span>
                                         <p class="text-right" ng-show="w.attachment.attachment"><i class="fa fa-arrow-circle-o-down"></i> <a href="uploads/{{vm.claimid}}/{{w.attachment.attachment}}" target="_blank">Download attachment</a></p>
-                                        <p><small class="text-muted"><i class="fa fa-clock-o"></i> last modified: {{w.auditwhen | date: "medium"}}</small><small ng-show="w.auditwho"> by {{w.auditwho}}</small>
+                                        <p><small class="text-muted"><i class="fa fa-clock-o"></i> modified: {{w.auditwhen | date: "medium"}}</small><small ng-show="w.auditwho"> by {{w.auditwho}}</small>
                                         </p>
-                                        <p class="text-right"><small class="text-muted"><a href="" ng-click="editWorkForm(w)"><i class="fa fa-edit"></i> Edit</a></small></p>
+                                        <p class="text-right" ng-show="w.auditwho == vm.username"><small class="text-muted"><a href="" ng-click="editWorkForm(w)"><i class="fa fa-edit"></i> Edit</a></small></p>
                                     </div>
                                 </div>
                             </li>
@@ -305,12 +321,12 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row" ng-show="isServiceLog">
+                            <div class="form-group row" ng-show="isInspection">
                                 <div class="col-sm-6" ng-class="{ 'has-error': form.$submitted && form.inspectiondate.$invalid }">
                                     <div class="form-group">
                                         <label for="inspectiondate">Inspection Date</label>
-                                        <div class='input-group date' id='datetimepicker1'>
-                                            <input type='text' class="form-control" name="inspectiondate" ng-model="vm.inspectiondate" ng-required="isServiceLog"/>
+                                        <div class='input-group date' ng-model="vm.inspectiondate" date-picker>
+                                            <input type='text' class="form-control" name="inspectiondate" ng-model="vm.inspectiondate" ng-required="isInspection" date-picker-input/>
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
@@ -320,11 +336,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <script type="text/javascript">
+                               <!-- <script type="text/javascript">
                                     $(function () {
-                                        $('#datetimepicker1').datetimepicker();
+
                                     });
-                                </script>
+                                </script>-->
                             </div>
                             <div class="form-group row">
                                 <div class="col-xs-12" ng-class="{ 'has-error': form.$submitted && form.worknotes.$invalid }">

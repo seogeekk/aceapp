@@ -91,8 +91,12 @@
 
             $http.post(apiDomain + apiVersion + '/worklog/new', form, config)
                 .then( function (response) {
-
-                    var payload = JSON.parse(response.data);
+                    var payload;
+                    if (typeof response.data === 'object') {
+                        payload = response.data;
+                    } else {
+                        payload = JSON.parse(response.data);
+                    }
                     if(payload.success) {
                         callback(true,payload.workitem);
                     } else {
@@ -123,10 +127,15 @@
                 transformResponse: angular.identity
             };
 
+            console.log(WorklogDetails);
             $http.post(apiDomain + apiVersion + '/worklog/update', form, config)
                 .then( function (response) {
-                    // login successful if there's a token in the reponse
-                    var payload = JSON.parse(response.data);
+                    var payload;
+                    if (typeof response.data === 'object') {
+                        payload = response.data;
+                    } else {
+                        payload = JSON.parse(response.data);
+                    }
 
                     if(payload.success) {
                         callback(true,payload.workitem);
