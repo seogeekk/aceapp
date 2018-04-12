@@ -559,7 +559,7 @@ table.dataTable thead .sorting:after {
 }
 
 @media screen and (max-width:991px) {
-  .dropdown .dropdown-menu,
+  .dropdown-non-menu .dropdown-menu,
   .navbar-fixed-bottom .dropdown .dropdown-menu {
     top: auto;
     bottom: 100%;
