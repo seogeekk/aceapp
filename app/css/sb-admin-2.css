@@ -557,3 +557,29 @@ table.dataTable thead .sorting:after {
   -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
+
+@media screen and (max-width:991px) {
+  .dropdown .dropdown-menu,
+  .navbar-fixed-bottom .dropdown .dropdown-menu {
+    top: auto;
+    bottom: 100%;
+    margin-bottom: 2px;
+  }
+
+  @media (max-width: 768px) {
+    .navbar-right .dropdown-menu {
+      right: 0;
+      left: auto;
+    }
+
+    .navbar-right .dropdown-menu-left {
+      right: auto;
+      left: 0;
+    }
+  }
+}
+
+.dropdown .dropdown-menu,
+.navbar-fixed-bottom .dropdown .dropdown-menu {
+  min-width: 100%;
+}

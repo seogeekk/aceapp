@@ -57,7 +57,7 @@
                         <div class="col-xs-4">
                             <label class="label-label"><strong>Assignee</strong></label>
                         </div>
-                        <div class="form-group col-xs-4">
+                        <div class="form-group col-xs-8">
                             <form role="form" name="form" ng-submit="form.$valid && vm.assign()" novalidate>
                                 <div class="input-group" ng-hide="assignedit">
                                     <label ng-click="changeAssign()" class="text-left text-info label-assign">{{vm.staffassign.staffname}}</label>
@@ -68,9 +68,11 @@
                                         <button  ng-disabled="vm.loading" class="btn btn-secondary"><i class="fa fa-check"></i></button>
                                     </span>
                                 </div>
-                                <ul class="list-group" style="position: absolute; z-index: 999;" >
-                                    <li class="list-group-item" ng-repeat="staff in stafflist track by staff.username" ng-click="fillStaff(staff)"><span>{{staff.staffname}} <small>{{staff.username}}</small></span></li>
-                                </ul>
+                                <span>
+                                    <ul class="list-group" style="position: absolute; z-index: 999;" >
+                                        <li class="list-group-item" ng-repeat="staff in stafflist track by staff.username" ng-click="fillStaff(staff)"><span>{{staff.staffname}} <small>{{staff.username}}</small></span></li>
+                                    </ul>
+                                </span>
                             </form>
                         </div>
                     </div>
