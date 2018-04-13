@@ -20,7 +20,7 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
 'use strict';
 
 angular
-  .module('app', ['ui.router', 'ngMessages', 'ngStorage', 'ngTable', 'ui.bootstrap', 'ui.select', 'ngSanitize', 'ngFileUpload'])
+  .module('app', ['ui.router', 'ngMessages', 'ngStorage', 'ngTable', 'ui.bootstrap', 'ui.select', 'ngSanitize', 'ngFileUpload', 'moment-picker'])
   .config(config)
   .run(run);
 

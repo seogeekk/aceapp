@@ -3,33 +3,6 @@
 
     angular
         .module('app')
-        .directive('datePicker', function () {
-        return {
-            require: 'ngModel',
-            link: function (scope, element, attr, ngModel) {
-
-                $(element).datetimepicker({defaultDate: false, minDate: new Date()});
-
-                $(element).on("dp.change", function (e) {
-                    ngModel.$setViewValue = e.date;
-                    ngModel.$commitViewValue();
-                });
-            }
-        };
-        })
-        .directive('datePickerInput', function() {
-            return {
-                require: 'ngModel',
-                link: function (scope, element, attr, ngModel) {
-                    // Trigger the Input Change Event, so the Datepicker gets refreshed
-                    scope.$watch(attr.ngModel, function (value) {
-                        if (value) {
-                            element.trigger("change");
-                        }
-                    });
-                }
-            };
-        })
         .controller('ManageClaim.IndexController', Controller);
 
     function Controller($scope, $state, $location, $stateParams, $localStorage, ClaimService, AddressService, PropertyService, WorklogService, StaffService, $timeout) {
@@ -45,6 +18,7 @@
         // global variables
         vm.snapshot = false;
         vm.editflag = true;
+        vm.today = new Date();
 
         initController();
 
@@ -339,6 +313,7 @@
                         if (vm.status.statusid == 1) {
                             changeStatus(2, 'Assigned');
                         }
+                        // Refresh assignee
                         populateAssignee();
                         $scope.assignedit = false;
                     }
@@ -574,6 +549,7 @@
                 username: vm.username
             };
 
+            console.log(WorklogDetails);
             if(vm.workitemid) {
                 // this is an update, check if it does exists
                 WorklogDetails.workitemid = vm.workitemid;

@@ -144,8 +144,10 @@
         }
 
         function AssignClaim(ClaimDetails, callback) {
+
             $http.post(apiDomain + apiVersion + '/claim/assign', ClaimDetails, config)
                 .then( function (response) {
+
                     var payload = response.data;
                     if(payload.success) {
                         callback(true);

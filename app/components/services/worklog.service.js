@@ -14,6 +14,7 @@
         service.WorklogExists = WorklogExists;
         service.UpdateWorklog = UpdateWorklog;
         service.DeleteAttachment = DeleteAttachment;
+        service.SendInspectionMail = SendInspectionMail;
 
         var apiDomain = 'http://localhost:3000';
         var apiVersion = '/api/v1';
@@ -160,6 +161,22 @@
                     }
                 }, function(response) {
                     return null;
+                });
+        }
+
+        function SendInspectionMail(Mail) {
+            return $http.post(apiDomain + apiVersion + '/notification/inspection', Mail, config)
+                .then( function (response) {
+
+                    var payload = response.email;
+
+                    if(payload.success) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }, function(response) {
+                    return false;
                 });
         }
 
