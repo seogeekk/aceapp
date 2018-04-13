@@ -260,7 +260,7 @@
                                         <p><small class="text-muted text-info"><i class="fa fa-clock-o"></i> created: {{w.creationdate | date: "medium"}}</small></p>
                                     </div>
                                     <div class="timeline-body">
-                                        <p>{{w.notes}}</p>
+                                        <p>{{w.notes}}</p><br>
                                         <!-- Inspection related -->
                                         <span ng-show="w.inspection.inspectionid">
                                             <p><i class="fa fa-calendar"></i> Inspection on {{w.inspection.inspectiondate | date: "medium"}}</p>
@@ -327,7 +327,7 @@
                                 <div class="col-sm-6" ng-class="{ 'has-error': form.$submitted && form.inspectiondate.$invalid }">
                                     <div class="form-group">
                                         <label for="inspectiondate">Inspection Date</label>
-                                        <div class="input-group" moment-picker="vm.inspectiondate" format="DD-MM-YYYY HH:[00]" min-date="vm.today">
+                                        <div class="input-group" moment-picker="vm.inspectiondate" min-date="vm.today">
                                             <input class="form-control" name="inspectiondate" placeholder="Select a date" ng-model="vm.inspectiondate" ng-required="isInspection" ng-model-options="{ updateOn: 'blur' }">
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
@@ -399,6 +399,9 @@
                             <li ng-repeat="s in vm.statustypes track by s.statustypeid"><a href="" ng-click="vm.changestatus(s.statustypeid, s.statusname)">{{s.statusname}}</a></li>
                         </ul>
                     </div>
+                </div>
+                <div class="form-group" ng-show="forApproval()">
+                    <button class="btn btn-success btn-outline btn-block" type="button" ng-click="vm.approveClaim()">Approve</button>
                 </div>
             </div>
         </div>

@@ -14,6 +14,7 @@
         vm.assign = assign;
         vm.deleteAttachment = deleteAttachment;
         vm.changestatus = changeStatus;
+        vm.approveClaim = approveClaim;
 
         // global variables
         vm.snapshot = false;
@@ -65,6 +66,7 @@
                             vm.editflag = false;
                             vm.snapshot = true;
                             refreshStatusBar();
+
                         } else {
                             alert("Claim not found!");
                             $state.go("request");
@@ -73,6 +75,7 @@
 
                 worklogHistory();
                 populateAssignee();
+
             } else {
                 // This assumes it is a new claim
                 vm.editflag = true;
@@ -109,6 +112,16 @@
                     $state.go('request');
                 }
 
+            }
+
+            $scope.forApproval = function() {
+
+                if ((vm.roleid == 1 || vm.roleid == 2) && (vm.status)) {
+                    if (vm.status.statusid == 4){
+                        return true;
+                    }
+                }
+                return false;
             }
 
             $scope.showWorkForm = function() {
@@ -227,7 +240,7 @@
                 .then(function(response) {
                     if (response.constructor === Array) {
                         vm.statustypes = response.filter(function(i) {
-                            return i.statustypeid>2;
+                            return i.statustypeid>2 && i.statustypeid!=5;
                         });
                     }
                 })
@@ -239,6 +252,22 @@
                     // update status
                     vm.status.statusname = name;
                     vm.status.statusid = status;
+
+                    // notify via sms and email
+                    if (vm.status.statusid == 3 || vm.status.statusid == 5 || vm.status.statusid == 7
+                        || vm.status.statusid == 8 || vm.status.statusid == 9 || vm.status.statusid == 10) {
+                        // TODO: replace submitted name with custname
+                        var Mail = {
+                            custname: vm.submittedname,
+                            username: vm.submitteduser,
+                            address: vm.property,
+                            claimid: vm.claimid,
+                            summary: vm.summary,
+                            status: vm.status.statusname
+                        };
+                        WorklogService.SendNotificationMail(Mail);
+                    }
+
                     return true;
                 } else {
                     return false;
@@ -319,6 +348,21 @@
                     }
                 });
             }
+        }
+
+        function approveClaim() {
+            var ClaimDetails = {
+                claimid: vm.claimid,
+                username: vm.username
+            }
+
+            ClaimService.ApproveClaim(ClaimDetails, function(results, response){
+                if (results == false) {
+                    vm.error = "Error approving claim";
+                } else {
+                    changeStatus(5, 'Approved');
+                }
+            });
         }
 
         function populateAssignee() {
@@ -541,7 +585,7 @@
 
             var WorklogDetails = {
                 worklogid: vm.claimid,
-                description: vm.summary,
+                description: vm.worklogdesc,
                 worktype: vm.worktype.worktypetypeid,
                 inspectiondate: vm.inspectiondate,
                 inspectionid: vm.inspectionid,
@@ -549,7 +593,6 @@
                 username: vm.username
             };
 
-            console.log(WorklogDetails);
             if(vm.workitemid) {
                 // this is an update, check if it does exists
                 WorklogDetails.workitemid = vm.workitemid;
@@ -580,7 +623,21 @@
 
                     if(result) {
                         if (response) {
-                            vm.workitemid = response;
+                            vm.workitemid = response.workitemid;
+                            // Send notification (sms, mail) if inspection
+                            // TODO: replace with customer name not submitteduser
+                            var Mail = {
+                                inspectionid: vm.workitemid,
+                                custname: vm.submittedname,
+                                username: vm.submitteduser,
+                                address: vm.property,
+                                claimid: vm.claimid,
+                                inspectiondate: vm.inspectiondate,
+                                summary: vm.worklogdesc
+                            };
+
+                            console.log(Mail);
+                            WorklogService.SendInspectionMail(Mail);
                             vm.loading = false;
                             vm.workmessage = 'Added worklog';
                             $timeout(function() {
@@ -588,6 +645,7 @@
                             }, 3000);
                             worklogHistory();
                             $scope.hideWorkForm();
+
                         } else {
                             vm.loading = false;
                             vm.workerror = 'Error adding worklog';

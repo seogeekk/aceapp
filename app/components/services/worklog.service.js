@@ -15,6 +15,7 @@
         service.UpdateWorklog = UpdateWorklog;
         service.DeleteAttachment = DeleteAttachment;
         service.SendInspectionMail = SendInspectionMail;
+        service.SendNotificationMail = SendNotificationMail;
 
         var apiDomain = 'http://localhost:3000';
         var apiVersion = '/api/v1';
@@ -168,13 +169,21 @@
             return $http.post(apiDomain + apiVersion + '/notification/inspection', Mail, config)
                 .then( function (response) {
 
-                    var payload = response.email;
+                    var payload = response.body;
 
-                    if(payload.success) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return;
+                }, function(response) {
+                    return false;
+                });
+        }
+
+        function SendNotificationMail(Mail) {
+            return $http.post(apiDomain + apiVersion + '/notification/claimstatus', Mail, config)
+                .then( function (response) {
+
+                    var payload = response.body;
+
+                    return;
                 }, function(response) {
                     return false;
                 });

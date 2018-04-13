@@ -39,8 +39,19 @@ function config($stateProvider, $urlRouterProvider) {
                },
                'body@home': {
                    controller: function($state) {
-                       $state.go('request');
+                       $state.go('dashboard');
                    }
+               }
+           }
+       })
+       .state('dashboard', {
+           url: 'dashboard',
+           parent: 'home',
+           views: {
+               'body@home': {
+                   templateUrl: 'dashboard/index.view.html',
+                   controller: 'Dashboard.IndexController',
+                   controllerAs: 'vm'
                }
            }
        })

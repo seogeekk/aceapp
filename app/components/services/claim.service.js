@@ -19,6 +19,7 @@
         service.AssignClaim = AssignClaim;
         service.GetAssignment = GetAssignment;
         service.ChangeStatus = ChangeStatus;
+        service.ApproveClaim = ApproveClaim;
 
         var apiDomain = 'http://localhost:3000';
         var apiVersion = '/api/v1';
@@ -146,6 +147,23 @@
         function AssignClaim(ClaimDetails, callback) {
 
             $http.post(apiDomain + apiVersion + '/claim/assign', ClaimDetails, config)
+                .then( function (response) {
+
+                    var payload = response.data;
+                    if(payload.success) {
+                        callback(true);
+                    } else {
+                        // assigned to previous user
+                        callback(true);
+                    }
+                }, function(response) {
+                    callback(false,response);
+                });
+        }
+
+        function ApproveClaim(ClaimDetails, callback) {
+
+            $http.post(apiDomain + apiVersion + '/claim/approve/', ClaimDetails, config)
                 .then( function (response) {
 
                     var payload = response.data;
