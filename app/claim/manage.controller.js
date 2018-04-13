@@ -278,11 +278,11 @@
         function refreshStatusBar() {
             $scope.getStatusColor = function() {
                 // set bg-status
-                if (vm.status.statusid == 9 || vm.status.statusid == 10) {
+                if (vm.status.statusid == 8 || vm.status.statusid == 9) {
                     return 'progress-bar-danger';
                 } else if (vm.status.statusid == 1) {
                     return 'progress-bar-info';
-                } else if (vm.status.statusid == 8) {
+                } else if (vm.status.statusid == 7) {
                     return 'progress-bar-success';
                 } else {
                     return 'progress-bar-warning';
@@ -290,11 +290,11 @@
             }
 
             $scope.getPercentage=function() {
-                if (vm.status.statusid == 9 || vm.status.statusid == 10) {
+                if (vm.status.statusid == 8 || vm.status.statusid == 9) {
                     return 100;
                 } else if (vm.status.statusid == 1) {
                     return 10;
-                } else if (vm.status.statusid == 8) {
+                } else if (vm.status.statusid == 7) {
                     return 100;
                 } else {
                     return vm.status.statusid*10;
