@@ -28,12 +28,12 @@ ACEAPIDIR=/usr/pkg/aceapi
 ACEAPPDIR=/usr/pkg/aceapp
 
 echo "Checkout repositories"
-if [[ -d /usr/pkg/aceapi ]]; then
+if [[ ! -d /usr/pkg/aceapi ]]; then
 	mkdir -p /usr/pkg
 	cd /usr/pkg
 	git clone https://github.com/seogeekk/aceapi.git
 fi
-if [[ -d /usr/pkg/aceapp ]]; then
+if [[ ! -d /usr/pkg/aceapp ]]; then
 	mkdir -p /usr/pkg
 	cd /usr/pkg
 	git clone https://github.com/seogeekk/aceapp.git
@@ -80,7 +80,7 @@ cp -rf $ACEAPPDIR/app/* /var/www/html
 [[ $? -ne 0 ]] && { echo "Error: Failed copying aceapp files to /var/www/html"; exit 1; }
 
 echo "Run replace of external address"
-./replacehost.pl $ACE_EXTERNAL_IP_ADDRESS
+replacehost.pl $ACE_EXTERNAL_IP_ADDRESS
 
 echo "Check for localhost references"
 grep localhost  /var/www/html/components/services/*.js
@@ -100,7 +100,7 @@ service nginx restart
 [[ $? -ne 0 ]] && { echo "Error: Nginx restart failed"; exit 1; }
 
 echo "Restart apache2"
-service apache2 Restart
+service apache2 restart
 [[ $? -ne 0 ]] && { echo "Error: Apache2 restart failed"; exit 1; }
 
 echo
