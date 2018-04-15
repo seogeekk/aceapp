@@ -589,3 +589,9 @@ table.dataTable thead .sorting:after {
 .navbar-fixed-bottom .dropdown .dropdown-menu {
   min-width: 100%;
 }
+
+.hr-none {
+  background:none;
+  clear:both;
+  border:none;
+}

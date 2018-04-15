@@ -146,6 +146,12 @@ function config($stateProvider, $urlRouterProvider) {
            controllerAs: 'vm'
 
        })
+       .state('workitem', {
+           url: '/workitem/:token',
+           templateUrl: 'workitem/index.view.html',
+           controller: 'Workitem.IndexController',
+           controllerAs: 'vm'
+       })
 }
 
 function run($rootScope, $http, $location, $localStorage) {
@@ -156,9 +162,15 @@ function run($rootScope, $http, $location, $localStorage) {
    }
 
    $rootScope.$on('$locationChangeStart', function(event, next, current) {
+       var subdomain = $location.path().split("/")[1];
+
+       var publicSubPages = ['workitem'];
        var publicPages = ['/login', '/signup'];
+
+       var allowedSubPage = publicSubPages.indexOf(subdomain) === -1;
        var restrictedPage = publicPages.indexOf($location.path()) === -1;
-       if (restrictedPage && !$localStorage.currentUser) {
+
+       if (restrictedPage && allowedSubPage && !$localStorage.currentUser) {
           $location.path('/login');
        }
    });

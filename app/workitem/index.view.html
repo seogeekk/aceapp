@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer</title>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3">
+            &nbsp;
+            <!--<h1 class="page-header"></h1>-->
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div ng-if="vm.error" class="alert alert-danger">{{vm.error}}</div>
+                            <div ng-if="vm.alert" class="alert alert-success">{{vm.alert}}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <h3>Inspection Request - {{vm.claimid}}</h3>
+                        <hr>
+                        <p>An inspection is required to be conducted on {{vm.inspectiondate| date: "medium" }} in {{vm.property}}. This is in relation to your request <b>{{vm.summary}}</b>.</p>
+
+                        <p>Please respond if you are able to accommodate the said schedule.</p>
+                        <div class="col-md-10 col-md-offset-1">
+                            <div class="huge-xs"><i class="fa fa-calendar fa-2x"></i> {{vm.inspectiondate | date: "EEEE, MMMM d, y h:mm a"}}</div><br>
+                        </div>
+                        <div class="col-md-10 col-md-offset-1">
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item" frameborder="0" style="border:0" ng-src="{{vm.mapurl}}" allowfullscreen></iframe>
+                            </div>
+                            <hr class="hr-none">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-md-offset-4" ng-show="responded() && isCurrent()">
+
+                        <div class="btn-toolbar">
+                            <button ng-disabled="vm.loading" class="btn btn-success btn-circle btn-lg" ng-click="vm.accept()"><i class="fa fa-check"></i></button>
+                            <button type="button" ng-disabled="vm.loading" class="btn btn-danger btn-circle btn-lg" ng-click="vm.reject()"><i class="fa fa-times"></i></button>
+                            <img ng-if="vm.loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                        </div>
+
+                    </div>
+                    <div class="col-md-8 col-md-offset-2" ng-show="!isCurrent() && !responded()">
+                        <div class="alert alert-info">This inspection request is already in the past</div>
+                    </div>
+                    <div class="col-md-4 col-md-offset-4" ng-hide="responded()">
+                        <div ng-show="vm.response"><i class="fa fa-check-circle fa-2x"></i> <strong class="huge-xs">Accepted</strong></div>
+                        <div ng-hide="vm.response"><i class="fa fa-times-circle fa-2x"></i> <strong class="huge-xs">Declined</strong></div>
+                    </div>
+                    <div class="col-md-12">
+                        <hr class="hr-none">
+                        <p>
+                            <strong>Need help?</strong><br><br>
+                            If you have any questions email us on <a href="mailto:balmain@acebodycorp.com.au">balmain@acebodycorp.com.au</a>, call 02 9818 6842 or contact your Strata manager.
+                        </p>
+                        <hr>
+                        <p class="text-center"><a href="#">Ace Body Online </a>&copy; 2018</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
