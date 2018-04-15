@@ -268,7 +268,7 @@
                                             <p ng-show="w.inspection.response.code == 0"><i class="fa fa-times-circle"></i> Rejected</p>
                                             <p ng-show="w.inspection.response.code == null"><i class="fa fa-question-circle"></i> No Response</p>
                                         </span>
-                                        <p class="text-right" ng-show="w.attachment.attachment"><i class="fa fa-arrow-circle-o-down"></i> <a href="uploads/{{vm.claimid}}/{{w.attachment.attachment}}" target="_blank">Download attachment</a></p>
+                                        <p class="text-right" ng-show="w.attachment.attachment"><i class="fa fa-arrow-circle-o-down"></i> <a href="" ng-click="downloadFile(w.attachment.itemid)" target="_blank"><small>{{w.attachment.attachment}}</small></a></p>
                                         <p><small class="text-muted"><i class="fa fa-clock-o"></i> modified: {{w.auditwhen | date: "medium"}}</small><small ng-show="w.auditwho"> by {{w.auditwho}}</small>
                                         </p>
                                         <p class="text-right" ng-show="w.auditwho == vm.username"><small class="text-muted"><a href="" ng-click="editWorkForm(w)"><i class="fa fa-edit"></i> Edit</a></small></p>

@@ -521,6 +521,20 @@
 
         };
 
+        // download attachment
+        $scope.downloadFile = function(itemid, filename) {
+            WorklogService.DownloadAttachment(itemid, function(result, data) {
+                if (result) {
+                    var file = new Blob([data.blob], { type: data.type });
+                    var URL = window.URL || window.webkitURL;
+                    var fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                } else {
+                    alert('File not found! Contact administrator');
+                }
+            });
+        }
+
         // WorkType
         $scope.onWorkType=function(){
             if (vm.worktype) {

@@ -16,6 +16,7 @@
         service.DeleteAttachment = DeleteAttachment;
         service.SendInspectionMail = SendInspectionMail;
         service.SendNotificationMail = SendNotificationMail;
+        service.DownloadAttachment = DownloadAttachment;
 
         var apiDomain = 'http://localhost:3000';
         var apiVersion = '/api/v1';
@@ -203,6 +204,26 @@
                 }, function(response) {
                     return false;
                 });
+        }
+
+        function DownloadAttachment(itemid, callback) {
+            // Set response type
+            config.responseType = 'arraybuffer';
+            //
+            $http.get(apiDomain + apiVersion + '/attachment/download/' + itemid, config)
+                .then( function (response) {
+                    if (response.data.success) {
+                        callback(false);
+                    } else {
+                        callback(true, {
+                            blob: response.data,
+                            type: response.headers("content-type")
+                        });
+                    }
+
+                }, function(response) {
+                    callback(false);
+                })
         }
 
     }
