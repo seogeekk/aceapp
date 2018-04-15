@@ -18,11 +18,15 @@
 
         function login() {
             vm.loading = true;
-            AuthenticationService.Login(vm.username, vm.password, function (result) {
+            AuthenticationService.Login(vm.username, vm.password, function (result, response) {
                 if (result == true) {
                     $location.path('/');
                 } else {
-                    vm.error = 'Username or password is incorrect';
+                    if (response.code == 'ERR004') {
+                        vm.error = 'Account is locked. Contact your administrator';
+                    } else {
+                        vm.error = 'Username or password is incorrect';
+                    }
                     vm.loading = false;
                 }
             });

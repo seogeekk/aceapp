@@ -39,11 +39,11 @@
                         callback(true);
                     } else {
                         // execute callback with false to indicate failed login
-                        callback(false);
+                        callback(false, response);
                     }
                 }, function(response) {
-                    console.log(response);
-                    callback(false);
+                    var payload = response.data;
+                    callback(false, payload);
                 });
         }
 
