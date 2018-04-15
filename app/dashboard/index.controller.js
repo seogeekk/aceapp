@@ -8,7 +8,6 @@
     function Controller($scope, $state, $location, $timeout, $localStorage, CustomerService, AddressService, StaffService, UserService) {
         var vm = this;
 
-        vm.submit = submit;
 
         initController();
 

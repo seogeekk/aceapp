@@ -50,7 +50,8 @@
                     vm.inspectiondate = response.inspectiondate;
                     vm.claimid = response.claimid;
                     vm.summary = response.description;
-                    vm.property = response.address1 + ' ' + response.address2 + ' ' + response.suburb + ' ' + response.state + ' ' + response.postcode;
+                    // build property address
+                    vm.property = [response.address1, response.address2, response.suburb, response.state, response.postcode].join(' ');
                     vm.latitude = response.latitude;
                     vm.longitude = response.longitude;
                     vm.mapurl = $sce.trustAsResourceUrl('https://www.google.com/maps/embed/v1/place?key=' + gmapkey + '&q= '+ vm.property + '&center=' + vm.latitude + ',' + vm.longitude);

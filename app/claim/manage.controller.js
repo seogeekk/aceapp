@@ -51,7 +51,7 @@
                             vm.submittedname = response.submittedname;
                             // property related
                             vm.canonicalid = response.property.property_canonical_id;
-                            vm.property = response.property.address1 + ' ' + response.property.address2 + ' ' + response.property.suburb + ' ' + response.property.state + ' ' + response.property.postcode;
+                            vm.property = [response.property.address1, response.property.address2, response.property.suburb, response.property.state, response.property.postcode].join(' ');
                             vm.address1 = response.property.address1;
                             vm.address2 = response.property.address2;
                             vm.suburb = response.property.suburb;
@@ -650,8 +650,11 @@
                                 summary: vm.worklogdesc
                             };
 
-                            console.log(Mail);
-                            WorklogService.SendInspectionMail(Mail);
+                            // Send Inspection Mail if Inspection
+                            if (vm.worktype.worktypetypeid == 2) {
+                                WorklogService.SendInspectionMail(Mail);
+                            }
+
                             vm.loading = false;
                             vm.workmessage = 'Added worklog';
                             $timeout(function() {
@@ -659,7 +662,6 @@
                             }, 3000);
                             worklogHistory();
                             $scope.hideWorkForm();
-
                         } else {
                             vm.loading = false;
                             vm.workerror = 'Error adding worklog';
