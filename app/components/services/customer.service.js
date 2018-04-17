@@ -13,6 +13,7 @@
         service.CustomerExists = CustomerExists;
         service.UpdateCustomer = UpdateCustomer;
         service.GetCustomerDetails = GetCustomerDetails;
+        service.GetAllCustomer = GetAllCustomer;
 
 
         var apiDomain = 'http://localhost:3000';
@@ -118,6 +119,22 @@
                     }
                 }, function(response) {
                     return null;
+                });
+        }
+
+        function GetAllCustomer(callback) {
+            $http.get(apiDomain + apiVersion + '/customer', config)
+                .then( function (response) {
+
+                    var payload = response.data;
+
+                    if(payload.success) {
+                        callback(true, payload.customers);
+                    } else {
+                        callback(false);
+                    }
+                }, function(response) {
+                    callback(false);
                 });
         }
     }

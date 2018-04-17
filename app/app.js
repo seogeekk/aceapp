@@ -133,6 +133,28 @@ function config($stateProvider, $urlRouterProvider) {
                }
            }
        })
+       .state('customer', {
+           url: 'customer',
+           parent: 'home',
+           views: {
+               'body@home': {
+                   templateUrl: 'customer/index.view.html',
+                   controller: 'Customer.IndexController',
+                   controllerAs: 'vm'
+               }
+           }
+       })
+       .state('managecustomer', {
+           url: 'customer/manage/:customerusername',
+           parent: 'home',
+           views: {
+               'body@home': {
+                   templateUrl: 'customer/manage.view.html',
+                   controller: 'ManageCustomer.IndexController',
+                   controllerAs: 'vm'
+               }
+           }
+       })
        .state('login', {
            url: '/login',
            templateUrl: 'login/index.view.html',
