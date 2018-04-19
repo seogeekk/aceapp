@@ -19,7 +19,7 @@
             // Initialise variables
             vm.searcherror = undefined;
             vm.username = $localStorage.currentUser.username;
-            vm.custname = $localStorage.currentUser.firstname + ' ' + $localStorage.currentUser.lastname;
+            vm.profilename = $localStorage.currentUser.firstname + ' ' + $localStorage.currentUser.lastname;
             vm.roleid = $localStorage.currentUser.roleid;
 
             $scope.isAdmin=function() {
@@ -112,7 +112,7 @@
                         if (results == true) {
                             vm.alert = "Staff successfully updated!";
                             $timeout(function() {
-                                vm.alertmessage = undefined;
+                                vm.alert = undefined;
                             }, 3000);
                             vm.loading = false;
                         } else {
@@ -136,7 +136,7 @@
                         vm.staffid = response.id;
                         vm.alert = "Staff successfully added!";
                         $timeout(function() {
-                            vm.alertmessage = undefined;
+                            vm.alert = undefined;
                         }, 3000);
                         vm.loading = false;
 

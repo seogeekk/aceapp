@@ -38,16 +38,20 @@
                                         <label for="property">Search</label>
                                     </div>
                                     <div class="col-xs-9" ng-class="{ 'has-error': form.$submitted && form.property.$invalid }">
-                                        <input type="text" name="property" ng-model="vm.property" ng-keyup="complete(vm.property)" class="form-control input-sm"/>
-                                        <ul class="list-group">
-                                            <li class="list-group-item" ng-repeat="address in addresslist" ng-click="fillTextbox(address)">{{address}}</li>
-                                        </ul>
-                                        <div ng-if="vm.searcherror" class="alert alert-danger">{{vm.searcherror}}</div>
+                                        <div class="input-group">
+                                            <input type="text" name="property" ng-model="vm.property" ng-keyup="complete(vm.property)" class="form-control input-sm"/>
+                                            <span class="input-group-btn">
+                                                <button ng-click="populateFields()" type="button" class="btn btn-sm btn-primary btn-block"><i class="fa fa-search"></i></button>
+                                            </span>
+                                        </div>
+                                        <span>
+                                            <ul class="list-group" style="position: absolute; z-index: 999; min-width: 88%">
+                                                <li class="list-group-item" ng-repeat="address in addresslist" ng-click="fillTextbox(address)">{{address}}</li>
+                                            </ul>
+                                            <div ng-if="vm.searcherror" class="alert alert-danger">{{vm.searcherror}}</div>
+                                        </span>
                                     </div>
-                                    <div class="col-xs-2">
-                                        <input ng-click="populateFields()" type="button" value="Fill" class="btn btn-sm btn-primary btn-block"/>
-                                        <!--<button class="btn btn-sm btn-primary btn-block" ng-click="fillTextbox(vm.property)">Fill</button>-->
-                                    </div>
+
                                 </div>
                                 <div class="form-group row">
 
@@ -56,15 +60,21 @@
                                     <div class="invisible"><input type="hidden" name="unit_type" class="form-control" ng-model="vm.unit_type"/></div>
                                     <div class="invisible"><input type="hidden" name="mesh_block" class="form-control" ng-model="vm.mesh_block"/></div>
 
+                                    <div class="col-md-10 col-md-offset-1" ng-show="vm.mapurl">
+                                        <div class="embed-responsive embed-responsive-16by9">
+                                            <iframe class="embed-responsive-item" frameborder="0" style="border:0" ng-src="{{vm.mapurl}}" allowfullscreen></iframe>
+                                        </div>
+                                        <hr class="hr-none">
+                                    </div>
 
-                                    <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.addressone.$invalid }">
+                                    <div class="col-xs-5" ng-class="{ 'has-error': form.$submitted && form.addressone.$invalid }">
                                         <label for="addressone">Address 1</label>
                                         <input type="text" name="addressone" class="form-control" ng-model="vm.addressone" required ng-disabled="true"/>
                                         <div ng-messages="form.$submitted && form.addressone.$error" class="help-block">
                                             <div ng-message="required">Address 1 is required</div>
                                         </div>
                                     </div>
-                                    <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.addresstwo.$invalid }">
+                                    <div class="col-xs-5" ng-class="{ 'has-error': form.$submitted && form.addresstwo.$invalid }">
                                         <label for="addresstwo">Address 2</label>
                                         <input type="text" name="address2" class="form-control" ng-model="vm.addresstwo" ng-disabled="true"/>
                                     </div>
@@ -84,13 +94,6 @@
                                             <div ng-message="required">State 1 is required</div>
                                         </div>
                                     </div>
-                                    <div class="col-xs-2" ng-class="{ 'has-error': form.$submitted && form.postcode.$invalid }">
-                                        <label for="postcode">Postcode</label>
-                                        <input type="text" name="postcode" class="form-control" ng-model="vm.postcode" required ng-disabled="true"/>
-                                        <div ng-messages="form.$submitted && form.postcode.$error" class="help-block">
-                                            <div ng-message="required">Postcode is required</div>
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.country.$invalid }">
@@ -98,6 +101,13 @@
                                         <input type="text" name="country" class="form-control" ng-model="vm.country" required ng-disabled="true"/>
                                         <div ng-messages="form.$submitted && form.country.$error" class="help-block">
                                             <div ng-message="required">Country is required</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3" ng-class="{ 'has-error': form.$submitted && form.postcode.$invalid }">
+                                        <label for="postcode">Postcode</label>
+                                        <input type="text" name="postcode" class="form-control" ng-model="vm.postcode" required ng-disabled="true"/>
+                                        <div ng-messages="form.$submitted && form.postcode.$error" class="help-block">
+                                            <div ng-message="required">Postcode is required</div>
                                         </div>
                                     </div>
                                 </div>

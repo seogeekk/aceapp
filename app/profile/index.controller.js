@@ -25,9 +25,7 @@
                     .then(function (response) {
                         vm.profileid = response.customerid;
                         vm.custtype = {custtypename: response.customertype.name, custtypeid: response.customertype.typeid};
-                        if (response.address1 || response.suburb || response.state || response.postcode) {
-                            vm.property = response.address1 + ' ' + response.address2 + ' ' + response.suburb + ' ' + response.state + ' ' + response.postcode
-                        }
+                        vm.property = [response.address1, response.address2, response.suburb, response.state, response.postcode].join(' ');
                         vm.email = response.emailaddress;
                         vm.mobile = response.mobilenumber;
                     });

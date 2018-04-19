@@ -5,12 +5,13 @@
         .module('app')
         .controller('ManageProperty.IndexController', Controller);
 
-    function Controller($scope, $location, $state, $stateParams, $localStorage, CustomerService, AddressService, PropertyService, $timeout) {
+    function Controller($scope, $location, $state, $stateParams, $localStorage, CustomerService, AddressService, PropertyService, $timeout, $sce) {
         var vm = this;
 
         vm.submit = submit;
 
         vm.alertmessage = "";
+        var gmapkey = 'AIzaSyD3qhwd9SE9xA2jrg6VxCruSg2DCNkADGQ';
         initController();
 
         function initController() {
@@ -43,7 +44,7 @@
                         if(response) {
                             vm.propertyid = response.propertyid;
                             vm.canonicalid = response.canonicalid;
-                            vm.property = response.address1 + ' ' + response.address2 + ' ' + response.suburb + ' ' + response.state + ' ' + response.postcode;
+                            vm.property = [response.address1, response.address2, response.suburb, response.state, response.postcode].join(' ');
                             vm.addressone = response.address1;
                             vm.addresstwo = response.address2;
                             vm.suburb = response.suburb;
@@ -51,6 +52,9 @@
                             vm.postcode = response.postcode;
                             vm.country = response.country;
                             vm.propertytype = {propertytypename: response.propertytype.name, propertytypeid: response.propertytype.typeid};
+                            vm.longitude = response.longitude;
+                            vm.latitude = response.latitude;
+                            vm.mapurl = $sce.trustAsResourceUrl('https://www.google.com/maps/embed/v1/place?key=' + gmapkey + '&q= '+ vm.property + '&center=' + vm.latitude + ',' + vm.longitude);
                         } else {
                             alert("Property not found!");
                             $state.go("property");
@@ -99,6 +103,7 @@
                         vm.longitude = address.longitude;
                         vm.unit_type = address.unit_type;
                         vm.mesh_block = address.mesh_block;
+                        vm.mapurl = $sce.trustAsResourceUrl('https://www.google.com/maps/embed/v1/place?key=' + gmapkey + '&q= '+ vm.property + '&center=' + vm.latitude + ',' + vm.longitude);
                     }, function(response) {
                         vm.searcherror = "Address not found";
                     });

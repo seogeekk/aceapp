@@ -69,7 +69,7 @@
                                     </span>
                                 </div>
                                 <span>
-                                    <ul class="list-group" style="position: absolute; z-index: 999;" >
+                                    <ul class="list-group" style="position: absolute; z-index: 999; min-width: 87%" >
                                         <li class="list-group-item" ng-repeat="staff in stafflist track by staff.username" ng-click="fillStaff(staff)"><span>{{staff.staffname}} <small>{{staff.username}}</small></span></li>
                                     </ul>
                                 </span>
@@ -122,7 +122,7 @@
                             <p><strong></strong></p>
                         </div>
                         <div class="col-xs-8">
-                            <p>{{vm.country}}</p>
+                            <p>{{vm.country}} <a href="" ng-click="viewProperty()" ng-show="isStaff() && vm.propertyid"><i class="fa fa-map-marker"></i></a></p>
                         </div>
                     </div>
                     <div class="row">
@@ -185,7 +185,7 @@
                             <div class="form-group row">
                                 <div class="col-xs-12" ng-class="{ 'has-error': form.$submitted && form.summary.$invalid }">
                                     <label for="summary">Summary</label>
-                                    <input type="text" name="summary" class="form-control" ng-model="vm.summary" required ng-disabled="vm.disabled"/>
+                                    <input type="text" name="summary" class="form-control" ng-model="vm.summary" maxlength="80" required ng-disabled="vm.disabled"/>
                                     <div ng-messages="form.$submitted && form.summary.$error" class="help-block">
                                         <div ng-message="required">Summary is required</div>
                                     </div>

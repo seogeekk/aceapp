@@ -51,6 +51,7 @@
                             vm.submittedname = response.submittedname;
                             // property related
                             vm.canonicalid = response.property.property_canonical_id;
+                            vm.propertyid = response.property.propertyid;
                             vm.property = [response.property.address1, response.property.address2, response.property.suburb, response.property.state, response.property.postcode].join(' ');
                             vm.address1 = response.property.address1;
                             vm.address2 = response.property.address2;
@@ -112,6 +113,10 @@
                     $state.go('request');
                 }
 
+            }
+
+            $scope.viewProperty = function() {
+                $state.go('manageproperty', { propertyid: vm.propertyid });
             }
 
             $scope.forApproval = function() {
