@@ -34,6 +34,7 @@
                             <td data-title="'Type'" filter="{'claimtype.typeid': 'select'}" filter-data="getCTypes()">{{ c.claimtype.name }}</td>
                             <td data-title="'Submitted Date'" sortable="'submitteddate'">{{ c.submitteddate | date: "medium" }}</td>
                             <td data-title="'Submitted User'" ng-if="isStaff()" filter="{'submitteduser': 'text'}">{{ c.submitteduser }}</td>
+                            <td data-title="'Assigned To'" ng-if="isStaff()" filter="{'assignusername': 'text'}">{{ c.assignusername }}</td>
                             <td data-title="'Status'" filter="{'status.statusid': 'select'}" filter-data="getSTypes()">{{ c.status.statusname }}</td>
                         </tr>
                         <tr class="odd gradeX" ng-show="$data.length == 0">

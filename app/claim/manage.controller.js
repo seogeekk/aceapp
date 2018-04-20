@@ -5,7 +5,7 @@
         .module('app')
         .controller('ManageClaim.IndexController', Controller);
 
-    function Controller($scope, $state, $location, $stateParams, $localStorage, ClaimService, AddressService, PropertyService, WorklogService, StaffService, $timeout) {
+    function Controller($scope, $state, $location, $stateParams, $localStorage, ClaimService, AddressService, PropertyService, WorklogService, StaffService, CustomerService, $timeout) {
         var vm = this;
 
         // functions
@@ -63,6 +63,8 @@
                             // other
                             vm.status = {statusname: response.status.statusname, statusid: response.status.statusid};
 
+                            vm.requestuser = {customername: vm.submittedname, username: vm.submitteduser};
+
                             // Set form flags
                             vm.editflag = false;
                             vm.snapshot = true;
@@ -89,10 +91,6 @@
                 return false;
             }
 
-            if ($scope.isStaff()) {
-                loadStaffRelated();
-            }
-
             $scope.changeAssign=function() {
                 $scope.assignedit = true;
             }
@@ -113,6 +111,13 @@
                     $state.go('request');
                 }
 
+            }
+
+            $scope.editable = function() {
+                if (vm.status > 2 && $scope.isCustomer()) {
+                    return true;
+                }
+                return false;
             }
 
             $scope.viewProperty = function() {
@@ -225,31 +230,16 @@
                     return 'timeline-inverted';
                 }
             }
+
+
+            // load Staff related
+            if ($scope.isStaff()) {
+                loadStaff();
+            }
+
         };
 
-        $scope.getStaff=function(string){
-            StaffService.SearchStaff(string)
-                .then(function(response) {
-                    $scope.stafflist=response;
-                });
-        }
-        $scope.fillStaff=function(string){
-            vm.staffassign=string;
-            $scope.stafflist=null;
-        }
 
-        function loadStaffRelated() {
-
-            // Retrieve status types
-            ClaimService.GetStatusTypes()
-                .then(function(response) {
-                    if (response.constructor === Array) {
-                        vm.statustypes = response.filter(function(i) {
-                            return i.statustypeid>2 && i.statustypeid!=5;
-                        });
-                    }
-                })
-        }
 
         function changeStatus(status, name) {
             ClaimService.ChangeStatus(vm.claimid, status, function(results, response) {
@@ -261,7 +251,7 @@
                     // notify via sms and email
                     if (vm.status.statusid == 3 || vm.status.statusid == 5 || vm.status.statusid == 7
                         || vm.status.statusid == 8 || vm.status.statusid == 9 || vm.status.statusid == 10) {
-                        // TODO: replace submitted name with custname
+
                         var Mail = {
                             custname: vm.submittedname,
                             username: vm.submitteduser,
@@ -404,69 +394,68 @@
             vm.alertmessage = undefined;
 
             if (vm.claimid) {
-                ClaimService.ClaimExists(vm.claimid)
-                    .then(function(response) {
-                        var claimid = response;
+                // Update existing claim
+                var ClaimDetails = {
+                    claimid: vm.claimid,
+                    property_canonical_id: vm.canonicalid,
+                    claimtypeid: vm.claimtype.claimtypeid,
+                    summary: vm.summary,
+                    description: vm.description,
+                    auditwho: vm.username
+                };
 
-                        if (claimid) {
-                            var ClaimDetails = {
-                                claimid: claimid,
-                                property_canonical_id: vm.canonicalid,
-                                claimtypeid: vm.claimtype.claimtypeid,
-                                summary: vm.summary,
-                                description: vm.description,
-                                submitteduser: vm.username
-                            };
-                            // Get Property details
-                            if(vm.canonicalid) {
-                                PropertyService.GetPropertyByCanonical(vm.canonicalid)
-                                    .then(function(payload) {
-                                        if (payload) {
-                                            // yes we found it
-                                            ClaimDetails.property_canonical_id = payload.property_canonical_id;
-                                            callUpdateClaim(ClaimDetails);
-                                        } else {
-                                            // create new
-                                            var PropertyDetails = {
-                                                property_canonical_id: vm.canonicalid,
-                                                address1: vm.address1,
-                                                address2: vm.address2,
-                                                suburb: vm.suburb,
-                                                state: vm.state,
-                                                postcode: vm.postcode,
-                                                country: vm.country,
-                                                latitude: vm.latitude,
-                                                longitude: vm.longitude,
-                                                unit_type: vm.unit_type,
-                                                mesh_block: vm.mesh_block,
-                                                propertytype: 5 // default to others to specify new
-                                            };
+                // Determine submit user
+                if ($scope.isStaff()) {
+                    ClaimDetails.submitteduser = vm.requestuser.username;
+                } else {
+                    ClaimDetails.submitteduser = vm.username;
+                }
 
-                                            PropertyService.CreateProperty(PropertyDetails, function(results, response) {
-                                                if (results == true) {
-                                                    vm.canonicalid = response.property_canonical_id;
-                                                    vm.propertyid = response.propertyid;
-
-                                                    // inserted property - create the claim
-                                                    ClaimDetails.property_canonical_id = response.property_canonical_id;
-                                                    callUpdateClaim(ClaimDetails);
-                                                } else {
-                                                    // Return callback error
-                                                    vm.error = 'Something went wrong!';
-                                                    vm.loading = false;
-                                                }
-                                            });
-                                        }
-                                    });
+                // Get Property details
+                if(vm.canonicalid) {
+                    PropertyService.GetPropertyByCanonical(vm.canonicalid)
+                        .then(function(payload) {
+                            if (payload) {
+                                // yes we found it
+                                ClaimDetails.property_canonical_id = payload.property_canonical_id;
+                                callUpdateClaim(ClaimDetails);
                             } else {
-                                vm.loading = false
-                                vm.error = 'Property not found!';
+                                // create new
+                                var PropertyDetails = {
+                                    property_canonical_id: vm.canonicalid,
+                                    address1: vm.address1,
+                                    address2: vm.address2,
+                                    suburb: vm.suburb,
+                                    state: vm.state,
+                                    postcode: vm.postcode,
+                                    country: vm.country,
+                                    latitude: vm.latitude,
+                                    longitude: vm.longitude,
+                                    unit_type: vm.unit_type,
+                                    mesh_block: vm.mesh_block,
+                                    propertytype: 5 // default to others to specify new
+                                };
+
+                                PropertyService.CreateProperty(PropertyDetails, function(results, response) {
+                                    if (results == true) {
+                                        vm.canonicalid = response.property_canonical_id;
+                                        vm.propertyid = response.propertyid;
+
+                                        // inserted property - create the claim
+                                        ClaimDetails.property_canonical_id = response.property_canonical_id;
+                                        callUpdateClaim(ClaimDetails);
+                                    } else {
+                                        // Return callback error
+                                        vm.error = 'Something went wrong!';
+                                        vm.loading = false;
+                                    }
+                                });
                             }
-                        } else {
-                            vm.error = 'Something went wrong!';
-                            vm.loading = false;
-                        }
-                    });
+                        });
+                } else {
+                    vm.loading = false
+                    vm.error = 'Property not found!';
+                }
             } else {
                 // Create new claim
                 var ClaimDetails = {
@@ -474,8 +463,16 @@
                     claimtypeid: vm.claimtype.claimtypeid,
                     summary: vm.summary,
                     description: vm.description,
-                    submitteduser: vm.username
+                    auditwho: vm.username
                 };
+
+                // Determine submitted user
+                if ($scope.isStaff()) {
+                    ClaimDetails.submitteduser = vm.requestuser.username;
+                } else {
+                    ClaimDetails.submitteduser = vm.username;
+                }
+
                 // Get Property details
                 if(vm.canonicalid) {
                     PropertyService.GetPropertyByCanonical(vm.canonicalid)
@@ -526,6 +523,45 @@
 
         };
 
+        function loadStaff() {
+            // load staff related scope
+
+            // Staff Assign
+            $scope.getStaff=function(string){
+                StaffService.SearchStaff(string)
+                    .then(function(response) {
+                        $scope.stafflist=response;
+                    });
+            }
+            $scope.fillStaff=function(string){
+                vm.staffassign=string;
+                $scope.stafflist=null;
+            }
+
+            // Customer Assign
+            $scope.getCustomer = function(string) {
+                CustomerService.SearchCustomer(string)
+                    .then(function(response) {
+                        $scope.customerlist=response;
+                    });
+            }
+
+            $scope.fillCustomer = function(string) {
+                vm.requestuser=string;
+                $scope.customerlist=null;
+            }
+
+            // Retrieve status types
+            ClaimService.GetStatusTypes()
+                .then(function(response) {
+                    if (response.constructor === Array) {
+                        vm.statustypes = response.filter(function(i) {
+                            return i.statustypeid>2 && i.statustypeid!=5;
+                        });
+                    }
+                })
+        }
+
         // download attachment
         $scope.downloadFile = function(itemid, filename) {
             WorklogService.DownloadAttachment(itemid, function(result, data) {
@@ -556,12 +592,14 @@
         }
 
         function callCreateClaim(ClaimDetails) {
-            console.log(ClaimDetails);
+
             ClaimService.CreateClaim(ClaimDetails, function(results, response) {
                 if (results == true) {
                     vm.alertmessage = "Claim successfully submitted!";
                     $timeout(function() {
                         vm.alertmessage = undefined;
+                        // close edit mode
+                        $scope.toggleClose();
                     }, 3000);
                     vm.loading = false;
                 } else {
@@ -577,12 +615,14 @@
         };
 
         function callUpdateClaim(ClaimDetails){
-            console.log(ClaimDetails);
+
             ClaimService.UpdateClaim(ClaimDetails, function(results, response) {
                 if (results == true) {
                     vm.alertmessage = "Claim successfully updated!";
                     $timeout(function() {
                         vm.alertmessage = undefined;
+                        // close edit mode
+                        $scope.toggleClose();
                     }, 3000);
                     vm.loading = false;
                 } else {
@@ -631,20 +671,20 @@
                             vm.workerror = 'Error updating worklog';
                         }
                     } else {
-                        console.log(response);
                         vm.loading = false;
                         vm.workerror = 'Error updating worklog';
                     }
                 });
 
             } else {
+                // Create a new worklog
                 WorklogService.CreateWorklog(WorklogDetails, vm.attachment, function(result, response) {
 
                     if(result) {
                         if (response) {
                             vm.workitemid = response.workitemid;
+
                             // Send notification (sms, mail) if inspection
-                            // TODO: replace with customer name not submitteduser
                             var Mail = {
                                 inspectionid: vm.workitemid,
                                 custname: vm.submittedname,
@@ -672,7 +712,6 @@
                             vm.workerror = 'Error adding worklog';
                         }
                     } else {
-                        console.log(response);
                         vm.loading = false;
                         vm.workerror = 'Error adding worklog';
                     }

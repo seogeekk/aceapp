@@ -3,8 +3,27 @@
 
     angular
         .module('app')
-        .controller('Home.IndexController', function($localStorage, $scope) {
+        .controller('Home.IndexController', function($localStorage, $scope, DashboardService) {
             var vm = this;
+
+            $scope.isApprover = function() {
+                if (vm.roleid == 1 || vm.roleid == 2) {
+                    return true;
+                }
+                return false;
+            }
+            $scope.isAdmin = function() {
+                if (vm.roleid == 1 ) {
+                    return true;
+                }
+                return false;
+            }
+            $scope.isStaff=function() {
+                if (vm.roleid == 4) {
+                    return false;
+                }
+                return true;
+            }
 
             initController();
 
@@ -12,14 +31,51 @@
                 vm.username = $localStorage.currentUser.username;
                 vm.profilename = $localStorage.currentUser.firstname + ' ' + $localStorage.currentUser.lastname;
                 vm.roleid = $localStorage.currentUser.roleid;
+
+                $scope.allrequests = 0;
+                $scope.openrequests = 0;
+                $scope.allapprovals = 0;
+                $scope.allproperties = 0;
+                $scope.myapprovals = 0;
+                $scope.myrequests = 0;
+                $scope.myinspections = 0;
+                $scope.myproperties = 0;
+
+                if($scope.isStaff()) {
+                    DashboardService.GetStaffDashboard(vm.username, function(results, response) {
+
+                        if (results == true) {
+                            $scope.allrequests = response.allrequests;
+                            $scope.openrequests = response.openrequests;
+                            $scope.allapprovals = response.allapprovals;
+                            $scope.allproperties = response.allproperties;
+                            $scope.myapprovals = response.forapprovals;
+                            $scope.myrequests = response.requests;
+                            $scope.myinspections = response.inspections;
+                            $scope.myproperties = response.properties;
+                        }
+                    });
+
+                    DashboardService.GetStaffCalendar(vm.username, function(results, response) {
+                        $scope.calendarlist = response;
+                    });
+
+                } else {
+                    DashboardService.GetUserDashboard(vm.username, function(results, response) {
+                        if (results == true) {
+                            $scope.openrequests = response.allrequests;
+                            $scope.myrequests = response.requests;
+                            $scope.myinspections = response.inspections;
+                            $scope.myproperties = response.properties;
+                        }
+                    })
+                }
+
+                $scope.notificationlist = undefined;
+
             }
 
-            $scope.isStaff=function() {
-                if (vm.roleid == 4) {
-                    return false;
-                }
-                return true;
-            }
+
         });
 
 

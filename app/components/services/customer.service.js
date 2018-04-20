@@ -14,7 +14,7 @@
         service.UpdateCustomer = UpdateCustomer;
         service.GetCustomerDetails = GetCustomerDetails;
         service.GetAllCustomer = GetAllCustomer;
-
+        service.SearchCustomer = SearchCustomer;
 
         var apiDomain = 'http://localhost:3000';
         var apiVersion = '/api/v1';
@@ -134,6 +134,25 @@
                     }
                 }, function(response) {
                     callback(false);
+                });
+        }
+
+        function SearchCustomer(query) {
+
+            return $http.get(apiDomain + apiVersion + '/customer/search/?query=' + query, config)
+                .then( function (response) {
+
+                    var payload = response.data;
+
+                    var results = [];
+
+                    var customer = payload.customer;
+                    for (var i = 0; i <customer.length; i++) {
+                        results.push({username: customer[i].username, customername: customer[i].customername});
+                    }
+                    return results;
+                }, function(response) {
+                    return null;
                 });
         }
     }

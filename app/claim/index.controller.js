@@ -11,7 +11,7 @@
             function initController() {
                 // Initialise variables
                 vm.username = $localStorage.currentUser.username;
-                vm.custname = $localStorage.currentUser.firstname + ' ' + $localStorage.currentUser.lastname;
+                vm.profilename = $localStorage.currentUser.firstname + ' ' + $localStorage.currentUser.lastname;
                 vm.roleid = $localStorage.currentUser.roleid;
 
                 $scope.isCustomer=function() {

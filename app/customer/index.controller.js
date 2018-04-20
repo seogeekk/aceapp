@@ -14,14 +14,14 @@
                 vm.profilename = $localStorage.currentUser.firstname + ' ' + $localStorage.currentUser.lastname;
                 vm.roleid = $localStorage.currentUser.roleid;
 
-                $scope.isAdmin=function() {
-                    if(vm.roleid ==1) {
-                        return true;
+                $scope.isStaff=function() {
+                    if(vm.roleid ==4) {
+                        return false;
                     }
-                    return false;
+                    return true;
                 }
 
-                if(! $scope.isAdmin()) {
+                if(! $scope.isStaff()) {
                     $state.go("home");
                 }
 

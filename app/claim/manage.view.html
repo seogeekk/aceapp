@@ -24,7 +24,7 @@
                             Claim Summary
                         </h4>
                     </div>
-                    <div class="col-xs-4 text-right">
+                    <div class="col-xs-4 text-right" ng-hide="editable()">
                         <a href="" target="_self" ng-click="toggleEdit()"><i class="fa fa-pencil"></i> Edit</a>
                     </div>
                 </div>
@@ -185,9 +185,23 @@
                             <div class="form-group row">
                                 <div class="col-xs-12" ng-class="{ 'has-error': form.$submitted && form.summary.$invalid }">
                                     <label for="summary">Summary</label>
-                                    <input type="text" name="summary" class="form-control" ng-model="vm.summary" maxlength="80" required ng-disabled="vm.disabled"/>
+                                    <input type="text" name="summary" class="form-control" ng-model="vm.summary" maxlength="120" required ng-disabled="vm.disabled"/>
                                     <div ng-messages="form.$submitted && form.summary.$error" class="help-block">
                                         <div ng-message="required">Summary is required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row" ng-show="isStaff()">
+                                <div class="col-xs-6" ng-class="{ 'has-error': form.$submitted && form.requestuser.$invalid && isStaff() }">
+                                    <label for="requestuser">Customer Name</label>
+                                    <input type="text" name="requestuser" class="form-control" ng-model="vm.requestuser.customername" ng-keyup="getCustomer(vm.requestuser.customername)" ng-required="isStaff()" ng-disabled="vm.disabled"/>
+                                    <span>
+                                        <ul class="list-group" style="position: absolute; z-index: 999; min-width: 87%" >
+                                            <li class="list-group-item" ng-repeat="customer in customerlist track by customer.username" ng-click="fillCustomer(customer)"><span>{{customer.customername}} <small>{{customer.username}}</small></span></li>
+                                        </ul>
+                                    </span>
+                                    <div ng-messages="form.$submitted && form.requestuser.$error" class="help-block">
+                                        <div ng-message="required">Customer Name is required</div>
                                     </div>
                                 </div>
                             </div>
@@ -377,7 +391,7 @@
         </div>
 
     </div>
-    <div class="col-lg-3" ng-show="isStaff()">
+    <div class="col-lg-3" ng-show="isStaff() && vm.claimid">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="row">
