@@ -216,7 +216,7 @@
                                         <td class="text-center" colspan="9">No Notification</td>
                                     </tr>
                                     <tr class="odd gradeX" ng-repeat="c in notificationlist">
-                                        <td class="text-center" colspan="9"><i class="fa fa-calendar"></i> {{c.inspectiondate | date: "medium"}}<br><a href="#!/claim/manage/{{c.claimid}}">{{c.description}}</a></td>
+                                        <td class="text-center" colspan="9"><i class="fa fa-calendar"></i> {{c.inspectiondate | date: "medium"}}<br><a href="#!/request/manage/{{c.claimid}}">{{c.description}}</a></td>
                                     </tr>
                                 </table>
                             </span>
@@ -242,7 +242,7 @@
                         <td class="text-center" colspan="9">No Results</td>
                     </tr>
                     <tr class="odd gradeX" ng-repeat="c in calendarlist">
-                        <td class="text-center" colspan="9"><i class="fa fa-calendar"></i> {{c.inspectiondate | date: "medium"}}<br><a href="#!/claim/manage/{{c.claimid}}">{{c.description}}</a></td>
+                        <td class="text-center" colspan="9"><i class="fa fa-calendar"></i> {{c.inspectiondate | date: "medium"}}<br><a ui-sref="managerequest({claimid: c.claimid})">{{c.description}}</a></td>
                     </tr>
                 </table>
             </div>
