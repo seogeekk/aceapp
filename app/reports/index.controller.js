@@ -77,13 +77,14 @@
 
                 // Bar Chart
                 DashboardService.GetRequestCountStat(vm.reportdate, function(results, response) {
-                    $scope.countlabels = ["Requests Logged", "Requests Cancelled", "Requests Rejected", "Requests Completed", "Completed <= 1d", "Completed <= 1w", "Completed > 1w"];
+                    $scope.countlabels = ["Requests Logged", "Requests In-Progress", "Requests Cancelled", "Requests Rejected", "Requests Completed", "Completed <= 1d", "Completed <= 1w", "Completed > 1w"];
                     $scope.countdata = [];
 
                     if(results == true) {
 
                         $scope.countdata = [
                             response[0].allrequests,
+                            response[0].openrequests,
                             response[0].cancelledrequests,
                             response[0].rejectedrequests,
                             response[0].closedrequests,
