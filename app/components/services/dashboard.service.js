@@ -11,7 +11,13 @@
         service.GetStaffDashboard = GetStaffDashboard;
         service.GetUserDashboard = GetUserDashboard;
         service.GetStaffCalendar = GetStaffCalendar;
-
+        service.GetSuburbStat = GetSuburbStat;
+        service.GetCompletionStat = GetCompletionStat;
+        service.GetRequestTypeStat = GetRequestTypeStat;
+        service.GetRequestCountStat = GetRequestCountStat;
+        service.GetRequestDurationStat = GetRequestDurationStat;
+        service.GetStaffStat = GetStaffStat;
+        service.GetCustomerStat = GetCustomerStat;
 
         var apiDomain = 'http://localhost:3000';
         var apiVersion = '/api/v1';
@@ -67,6 +73,118 @@
 
                     if(payload.success) {
                         callback(true, payload.calendar);
+                    } else {
+                        callback(false);
+                    }
+                }, function(response) {
+                    callback(false);
+                });
+        }
+
+        function GetSuburbStat(reportdate, callback) {
+            $http.get(apiDomain + apiVersion + '/stats/suburb/' + reportdate, config)
+                .then( function (response) {
+
+                    var payload = response.data;
+
+                    if(payload.success) {
+                        callback(true, payload.stats);
+                    } else {
+                        callback(false);
+                    }
+                }, function(response) {
+                    callback(false);
+                });
+        }
+
+        function GetCompletionStat(reportdate, callback) {
+            $http.get(apiDomain + apiVersion + '/stats/completion/' + reportdate, config)
+                .then( function (response) {
+
+                    var payload = response.data;
+
+                    if(payload.success) {
+                        callback(true, payload.stats);
+                    } else {
+                        callback(false);
+                    }
+                }, function(response) {
+                    callback(false);
+                });
+        }
+
+        function GetRequestTypeStat(reportdate, callback) {
+            $http.get(apiDomain + apiVersion + '/stats/requesttype/' + reportdate, config)
+                .then( function (response) {
+
+                    var payload = response.data;
+
+                    if(payload.success) {
+                        callback(true, payload.stats);
+                    } else {
+                        callback(false);
+                    }
+                }, function(response) {
+                    callback(false);
+                });
+        }
+
+        function GetRequestCountStat(reportdate, callback) {
+            $http.get(apiDomain + apiVersion + '/stats/requestcount/' + reportdate, config)
+                .then( function (response) {
+
+                    var payload = response.data;
+
+                    if(payload.success) {
+                        callback(true, payload.stats);
+                    } else {
+                        callback(false);
+                    }
+                }, function(response) {
+                    callback(false);
+                });
+        }
+
+        function GetRequestDurationStat(reportdate, callback) {
+            $http.get(apiDomain + apiVersion + '/stats/requestduration/' + reportdate, config)
+                .then( function (response) {
+
+                    var payload = response.data;
+
+                    if(payload.success) {
+                        callback(true, payload.stats);
+                    } else {
+                        callback(false);
+                    }
+                }, function(response) {
+                    callback(false);
+                });
+        }
+
+        function GetStaffStat(reportdate, callback) {
+            $http.get(apiDomain + apiVersion + '/stats/staff/' + reportdate, config)
+                .then( function (response) {
+
+                    var payload = response.data;
+
+                    if(payload.success) {
+                        callback(true, payload.stats);
+                    } else {
+                        callback(false);
+                    }
+                }, function(response) {
+                    callback(false);
+                });
+        }
+
+        function GetCustomerStat(reportdate, callback) {
+            $http.get(apiDomain + apiVersion + '/stats/customer/' + reportdate, config)
+                .then( function (response) {
+
+                    var payload = response.data;
+
+                    if(payload.success) {
+                        callback(true, payload.stats);
                     } else {
                         callback(false);
                     }

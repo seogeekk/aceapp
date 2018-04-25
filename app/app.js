@@ -20,7 +20,7 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
 'use strict';
 
 angular
-  .module('app', ['ui.router', 'ngMessages', 'ngStorage', 'ngTable', 'ui.bootstrap', 'ui.select', 'ngSanitize', 'ngFileUpload', 'moment-picker'])
+  .module('app', ['ui.router', 'ngMessages', 'ngStorage', 'ngTable', 'ui.bootstrap', 'ui.select', 'ngSanitize', 'ngFileUpload', 'moment-picker', 'chart.js'])
   .config(config)
   .run(run);
 
@@ -51,6 +51,17 @@ function config($stateProvider, $urlRouterProvider) {
                'body@home': {
                    templateUrl: 'dashboard/index.view.html',
                    controller: 'Dashboard.IndexController',
+                   controllerAs: 'vm'
+               }
+           }
+       })
+       .state('reports', {
+           url: 'reports',
+           parent: 'home',
+           views: {
+               'body@home': {
+                   templateUrl: 'reports/index.view.html',
+                   controller: 'Reports.IndexController',
                    controllerAs: 'vm'
                }
            }

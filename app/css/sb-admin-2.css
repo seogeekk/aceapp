@@ -595,3 +595,5 @@ table.dataTable thead .sorting:after {
   clear:both;
   border:none;
 }
+
+.row-buffer { margin-top:20px; margin-bottom: 10px}
