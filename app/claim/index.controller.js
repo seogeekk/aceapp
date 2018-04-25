@@ -28,31 +28,51 @@
                     return true;
                 }
 
-                ClaimService.GetAllClaims(function(result, data) {
 
-                    if(result == false) {
-                        data = [];
-                        vm.tableParams = new NgTableParams({
-                            page: 1,
-                            count: 25
-                        }, {
-                            dataset: data
-                        });
-                    } else {
-                        var filter = {
-                            submitteduser: undefined
+                $scope.loadTableParams = function() {
+                    vm.tableParams = new NgTableParams({
+                        page: 1,
+                        count: 25,
+                        filter: {}
+                    }, {
+                        dataset: []
+                    });
+
+                    ClaimService.GetAllClaims(vm.startdate, vm.enddate, function(result, data) {
+
+                        if(result == false) {
+                            data = [];
+                            vm.tableParams = new NgTableParams({
+                                page: 1,
+                                count: 25
+                            }, {
+                                dataset: data
+                            });
+                        } else {
+                            var filter = {
+                                submitteduser: undefined
+                            }
+                            if($scope.isCustomer()) {
+                                filter.submitteduser = vm.username
+                            }
+                            vm.tableParams = new NgTableParams({
+                                page: 1,
+                                count: 25,
+                                filter: filter
+                            }, {
+                                dataset: data
+                            });
                         }
-                        if($scope.isCustomer()) {
-                            filter.submitteduser = vm.username
-                        }
-                        vm.tableParams = new NgTableParams({
-                            page: 1,
-                            count: 25,
-                            filter: filter
-                        }, {
-                            dataset: data
-                        });
-                    }
+                    });
+
+                    vm.tableParams.reload();
+                }
+
+                $scope.$watch('vm.startdate', function() {
+                    $scope.loadTableParams();
+                });
+                $scope.$watch('vm.enddate', function() {
+                    $scope.loadTableParams();
                 });
 
 

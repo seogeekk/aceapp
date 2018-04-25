@@ -579,6 +579,10 @@
             });
         }
 
+        $scope.toggleSubmit = function() {
+            $state.go("request");
+        }
+
         // WorkType
         $scope.onWorkType=function(){
             if (vm.worktype) {
@@ -598,12 +602,18 @@
 
             ClaimService.CreateClaim(ClaimDetails, function(results, response) {
                 if (results == true) {
+
+                    // Update claimid
+                    vm.claimid = response.claimid;
+
                     vm.alertmessage = "Claim successfully submitted!";
                     $timeout(function() {
                         vm.alertmessage = undefined;
                         // close edit mode
                         $scope.toggleClose();
-                    }, 3000);
+                        // show submission prompt
+                        vm.submitted=true;
+                    }, 500);
                     vm.loading = false;
                 } else {
                     // Return callback error

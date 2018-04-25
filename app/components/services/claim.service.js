@@ -50,8 +50,8 @@
                 });
         }
 
-        function GetAllClaims(callback) {
-            $http.get(apiDomain + apiVersion + '/claim', config)
+        function GetAllClaims(startdate, enddate, callback) {
+            $http.get(apiDomain + apiVersion + '/claim/all/' + startdate + '/' + enddate, config)
                 .then( function (response) {
 
                     var payload = response.data;
