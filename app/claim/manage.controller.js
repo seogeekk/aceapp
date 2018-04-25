@@ -523,6 +523,7 @@
 
         };
 
+
         function loadStaff() {
             // load staff related scope
 
@@ -560,6 +561,8 @@
                         });
                     }
                 })
+
+
         }
 
         // download attachment

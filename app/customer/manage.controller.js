@@ -5,7 +5,7 @@
         .module('app')
         .controller('ManageCustomer.IndexController', Controller);
 
-    function Controller($scope, $location, $state, $stateParams, $localStorage, CustomerService, AddressService, $timeout) {
+    function Controller($scope, $location, $state, $stateParams, $localStorage, CustomerService, AddressService, UserService, $timeout) {
         var vm = this;
 
         vm.submit = submit;
@@ -49,6 +49,11 @@
                             vm.email = response.emailaddress;
                             vm.mobile = response.mobilenumber;
                             vm.property = [response.address1, response.address2, response.suburb, response.state, response.postcode].join(' ');
+
+                            UserService.GetUserStatus(vm.customerusername)
+                                .then(function(response) {
+                                    vm.userstatus = response;
+                                });
                         } else {
                             alert("Customer not found!");
                             $state.go("customer");
@@ -68,6 +73,63 @@
                     }
                 });
 
+            UserService.GetUserStatuses()
+                .then(function(response) {
+                    if (response.constructor === Array) {
+                        vm.userstatuses = response;
+                    }
+                });
+
+        };
+
+
+        $scope.resetPassword =function() {
+            vm.resetloading = true;
+
+            var password = randomPassword();
+            var UserDetails = {
+                username: vm.customerusername,
+                password: password
+            };
+            UserService.ResetPassword(UserDetails, function(result, response) {
+                if (result) {
+                    // Prompt user with auto-generated password
+                    alert("Password: " + password);
+                    vm.resetloading = false;
+                } else {
+                    alert("Error resetting password");
+                    vm.resetloading = false;
+                }
+            }, function(response) {
+                alert("Error resetting password");
+                vm.resetloading = false;
+            });
+        }
+
+        $scope.changeUserStatus=function() {
+            vm.statusloading = true;
+            vm.statuserror = undefined;
+            vm.statusalert = undefined;
+
+            var UserDetails = {
+                username: vm.customerusername,
+                status: vm.userstatus.userstatusid
+            };
+            UserService.ChangeUserStatus(UserDetails, function(result, response) {
+                if (result) {
+                    vm.statusalert = "User status updated!";
+                    $timeout(function() {
+                        vm.statusalert = undefined;
+                    }, 3000);
+                    vm.statusloading = false;
+                } else {
+                    vm.statuserror = "Error updating status";
+                    vm.statusloading = false;
+                }
+            }, function(response) {
+                vm.statuserror = "Error updating status";
+                vm.statusloading = false;
+            });
         };
 
         $scope.hideForm=function() {

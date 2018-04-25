@@ -5,7 +5,7 @@
         .module('app')
         .controller('ManageStaff.IndexController', Controller);
 
-    function Controller($scope, $location, $state, $stateParams, $localStorage, StaffService, $timeout) {
+    function Controller($scope, $location, $state, $stateParams, $localStorage, StaffService, UserService, $timeout) {
         var vm = this;
 
         vm.submit = submit;
@@ -42,6 +42,11 @@
                             vm.accesstype = {accesstypename: response.accesstype.name, accesstypeid: response.accesstype.typeid};
                             vm.department = {departmentname: response.department.name, departmentid: response.department.id};
                             vm.email = response.emailaddress;
+
+                            UserService.GetUserStatus(vm.staffusername)
+                                .then(function(response) {
+                                    vm.userstatus = response;
+                                });
                         } else {
                             alert("Staff not found!");
                             $state.go("staff");
@@ -75,6 +80,62 @@
                     }
                 });
 
+            UserService.GetUserStatuses()
+                .then(function(response) {
+                    if (response.constructor === Array) {
+                        vm.userstatuses = response;
+                    }
+                });
+
+        };
+
+        $scope.resetPassword =function() {
+            vm.resetloading = true;
+
+            var password = randomPassword();
+            var UserDetails = {
+                username: vm.staffusername,
+                password: password
+            };
+            UserService.ResetPassword(UserDetails, function(result, response) {
+                if (result) {
+                    // Prompt user with auto-generated password
+                    alert("Password: " + password);
+                    vm.resetloading = false;
+                } else {
+                    alert("Error resetting password");
+                    vm.resetloading = false;
+                }
+            }, function(response) {
+                alert("Error resetting password");
+                vm.resetloading = false;
+            });
+        }
+
+        $scope.changeUserStatus=function() {
+            vm.statusloading = true;
+            vm.statuserror = undefined;
+            vm.statusalert = undefined;
+
+            var UserDetails = {
+                username: vm.staffusername,
+                status: vm.userstatus.userstatusid
+            };
+            UserService.ChangeUserStatus(UserDetails, function(result, response) {
+                if (result) {
+                    vm.statusalert = "User status updated!";
+                    $timeout(function() {
+                        vm.statusalert = undefined;
+                    }, 3000);
+                    vm.statusloading = false;
+                } else {
+                    vm.statuserror = "Error updating status";
+                    vm.statusloading = false;
+                }
+            }, function(response) {
+                vm.statuserror = "Error updating status";
+                vm.statusloading = false;
+            });
         };
 
         $scope.hideForm=function() {

@@ -40,6 +40,10 @@
                                     <div ng-message="required">Username is required</div>
                                 </div>
                             </div>
+                            <div style="display: inline-block" ng-show="vm.username != vm.staffusername">
+                                <label for="resetButton">&nbsp;</label>
+                                <button class="btn btn-danger btn-block btn-outline" name="resetButton" type="button" ng-click="resetPassword()" ng-disabled="vm.resetloading">Reset Password</button>
+                            </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-xs-4" ng-class="{ 'has-error': form.$submitted && form.firstname.$invalid }">
@@ -117,6 +121,31 @@
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+        <div class="col-lg-3" ng-show="vm.customerusername">
+            <div class="form-group row">
+                <div class="col-xs-12">
+                    <label for="userstatus">User Status</label>
+                    <ui-select name="userstatus" ng-model="vm.userstatus" title="User Status" required>
+                        <ui-select-match>
+                            <span ng-bind="vm.userstatus.userstatusname"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="c in (vm.userstatuses | filter: $select.search) track by c.userstatusid">
+                            <span ng-bind="c.userstatusname"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-primary btn-block" type="button" ng-click="changeUserStatus()" ng-disabled="vm.statusloading">Change</button>
+            </div>
+
+            <div class="form-group">
+                <div ng-if="vm.statuserror" class="alert alert-danger">{{vm.statuserror}}</div>
+                <div ng-if="vm.statusalert" class="alert alert-success">{{vm.statusalert}}</div>
             </div>
         </div>
 </div>
