@@ -5,7 +5,7 @@
         .module('app')
         .controller('ManageClaim.IndexController', Controller);
 
-    function Controller($scope, $state, $location, $stateParams, $localStorage, ClaimService, AddressService, PropertyService, WorklogService, StaffService, CustomerService, $timeout) {
+    function Controller($scope, $state, $location, $stateParams, $localStorage, ClaimService, AddressService, PropertyService, WorklogService, StaffService, CustomerService, $timeout, $anchorScroll) {
         var vm = this;
 
         // functions
@@ -68,7 +68,16 @@
                             // Set form flags
                             vm.editflag = false;
                             vm.snapshot = true;
+
+                            // Refresh claim progress bar
                             refreshStatusBar();
+
+                            // Scroll to specific id
+                            if(window.location.hash) {
+                                $timeout(function() {
+                                    $anchorScroll();
+                                }, 300);
+                            };
 
                         } else {
                             alert("Claim not found!");
@@ -375,6 +384,7 @@
                 .then(function(response) {
                     vm.workitems = response;
                 });
+
         }
 
         $scope.checkWorkList=function (worktypeid) {

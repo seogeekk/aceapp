@@ -307,7 +307,7 @@
                                         <h4 class="timeline-title">{{w.description}}</h4>
                                         <p><small class="text-muted text-info"><i class="fa fa-clock-o"></i> created: {{w.creationdate | date: "medium"}}</small></p>
                                     </div>
-                                    <div class="timeline-body">
+                                    <div class="timeline-body" id="inspection-{{w.inspection.inspectionid}}">
                                         <p>{{w.notes}}</p><br>
                                         <!-- Inspection related -->
                                         <span ng-show="w.inspection.inspectionid">

@@ -5,7 +5,7 @@
         .module('app')
         .controller('ManageStaff.IndexController', Controller);
 
-    function Controller($scope, $location, $state, $stateParams, $localStorage, StaffService, UserService, $timeout) {
+    function Controller($scope, $location, $state, $stateParams, $localStorage, StaffService, UserService, $timeout, NgTableParams) {
         var vm = this;
 
         vm.submit = submit;
@@ -47,6 +47,27 @@
                                 .then(function(response) {
                                     vm.userstatus = response;
                                 });
+
+                            // If we've got a property, load all claims
+                            StaffService.GetAllClaims( vm.staffusername, function(result, data) {
+
+                                if(result == false) {
+                                    data = [];
+                                    vm.tableParams = new NgTableParams({
+                                        page: 1,
+                                        count: 25
+                                    }, {
+                                        dataset: data
+                                    });
+                                } else {
+                                    vm.tableParams = new NgTableParams({
+                                        page: 1,
+                                        count: 25
+                                    }, {
+                                        dataset: data
+                                    });
+                                }
+                            });
                         } else {
                             alert("Staff not found!");
                             $state.go("staff");

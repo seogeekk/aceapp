@@ -38,7 +38,7 @@
                                 </div>
                                 <a href="#!/request">
                                     <div class="panel-footer">
-                                        <span class="pull-left">View Details</span>
+                                        <span class="pull-left">View Requests</span>
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                         <div class="clearfix"></div>
                                     </div>
@@ -61,7 +61,7 @@
                                 </div>
                                 <a href="#!/request">
                                     <div class="panel-footer">
-                                        <span class="pull-left">View Details</span>
+                                        <span class="pull-left">View Requests</span>
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                         <div class="clearfix"></div>
                                     </div>
@@ -84,7 +84,7 @@
                                 </div>
                                 <a href="#!/property">
                                     <div class="panel-footer">
-                                        <span class="pull-left">View Details</span>
+                                        <span class="pull-left">View Properties</span>
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                         <div class="clearfix"></div>
                                     </div>
@@ -107,7 +107,7 @@
                                 </div>
                                 <a href="#!/request">
                                     <div class="panel-footer">
-                                        <span class="pull-left">View Details</span>
+                                        <span class="pull-left">View Requests</span>
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                         <div class="clearfix"></div>
                                     </div>
@@ -130,7 +130,7 @@
                                 </div>
                                 <a href="#!/request">
                                     <div class="panel-footer">
-                                        <span class="pull-left">View Details</span>
+                                        <span class="pull-left">View Requests</span>
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                         <div class="clearfix"></div>
                                     </div>
@@ -153,7 +153,7 @@
                                 </div>
                                 <a href="#!/property">
                                     <div class="panel-footer">
-                                        <span class="pull-left">View Details</span>
+                                        <span class="pull-left">View Properties</span>
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                         <div class="clearfix"></div>
                                     </div>
@@ -176,7 +176,7 @@
                                 </div>
                                 <a href="#!/request">
                                     <div class="panel-footer">
-                                        <span class="pull-left">View Details</span>
+                                        <span class="pull-left">View Requests</span>
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                         <div class="clearfix"></div>
                                     </div>
@@ -199,7 +199,7 @@
                                 </div>
                                 <a href="#!/request">
                                     <div class="panel-footer">
-                                        <span class="pull-left">View Details</span>
+                                        <span class="pull-left">View Requests</span>
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                         <div class="clearfix"></div>
                                     </div>
@@ -242,7 +242,7 @@
                         <td class="text-center" colspan="9">No Results</td>
                     </tr>
                     <tr class="odd gradeX" ng-repeat="c in calendarlist">
-                        <td class="text-center" colspan="9"><i class="fa fa-calendar"></i> {{c.inspectiondate | date: "medium"}}<br><a ui-sref="managerequest({claimid: c.claimid})">{{c.description}}</a></td>
+                        <td class="text-center" colspan="9"><i class="fa fa-calendar"></i> {{c.inspectiondate | date: "medium"}}<br><a href="#!/request/manage/{{c.claimid}}#inspection-{{c.inspectionid}}">{{c.description}}</a></td>
                     </tr>
                 </table>
             </div>

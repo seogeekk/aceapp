@@ -15,7 +15,8 @@
         service.GetPropertyDetails = GetPropertyDetails;
         service.GetPropertyByCanonical = GetPropertyByCanonical;
         service.GetAllProperties = GetAllProperties;
-
+        service.GetAllClaims = GetAllClaims;
+        service.GetAllPropertiesByUser = GetAllPropertiesByUser;
 
         var apiDomain = 'http://localhost:3000';
         var apiVersion = '/api/v1';
@@ -102,6 +103,21 @@
                 });
         }
 
+        function GetAllPropertiesByUser(username, callback) {
+            return $http.get(apiDomain + apiVersion + '/property/user/' + username, config)
+                .then( function (response) {
+
+                    var payload = response.data;
+                    if(payload.success) {
+                        callback(true,payload.properties);
+                    } else {
+                        callback(false);
+                    }
+                }, function(response) {
+                    callback(false,response);
+                });
+        }
+
         function GetAllProperties(callback) {
             return $http.get(apiDomain + apiVersion + '/property/', config)
                 .then( function (response) {
@@ -109,6 +125,21 @@
                     var payload = response.data;
                     if(payload.success) {
                         callback(true,payload.properties);
+                    } else {
+                        callback(false);
+                    }
+                }, function(response) {
+                    callback(false,response);
+                });
+        }
+
+        function GetAllClaims(property_canonical_id, callback) {
+            return $http.get(apiDomain + apiVersion + '/claim/property/' + property_canonical_id, config)
+                .then( function (response) {
+
+                    var payload = response.data;
+                    if(payload.success) {
+                        callback(true,payload.claims);
                     } else {
                         callback(false);
                     }

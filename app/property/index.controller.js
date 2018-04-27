@@ -29,32 +29,51 @@
                 return true;
             }
 
-            PropertyService.GetAllProperties(function(result, data) {
+            if ($scope.isCustomer()) {
+                PropertyService.GetAllPropertiesByUser(vm.username, function(result, data) {
 
-                if(result == false) {
-                    data = [];
-                    vm.tableParams = new NgTableParams({
-                        page: 1,
-                        count: 25
-                    }, {
-                        dataset: data
-                    });
-                } else {
-                    var filter = {
-                        submitteduser: undefined
-                    };
-                    if ($scope.isCustomer()) {
-                        filter.submitteduser = vm.username;
+                    if(result == false) {
+                        data = [];
+                        vm.tableParams = new NgTableParams({
+                            page: 1,
+                            count: 25
+                        }, {
+                            dataset: data
+                        });
+                    } else {
+
+                        vm.tableParams = new NgTableParams({
+                            page: 1,
+                            count: 25,
+                        }, {
+                            dataset: data
+                        });
                     }
-                    vm.tableParams = new NgTableParams({
-                        page: 1,
-                        count: 25,
-                        filter: filter
-                    }, {
-                        dataset: data
-                    });
-                }
-            });
+                });
+            } else {
+                PropertyService.GetAllProperties(function(result, data) {
+
+                    if(result == false) {
+                        data = [];
+                        vm.tableParams = new NgTableParams({
+                            page: 1,
+                            count: 25
+                        }, {
+                            dataset: data
+                        });
+                    } else {
+
+                        vm.tableParams = new NgTableParams({
+                            page: 1,
+                            count: 25,
+                        }, {
+                            dataset: data
+                        });
+                    }
+                });
+            }
+
+
 
 
             $scope.viewProperty = function(propertyid) {

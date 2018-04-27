@@ -5,7 +5,7 @@
         .module('app')
         .controller('ManageProperty.IndexController', Controller);
 
-    function Controller($scope, $location, $state, $stateParams, $localStorage, CustomerService, AddressService, PropertyService, $timeout, $sce) {
+    function Controller($scope, $location, $state, $stateParams, $localStorage, CustomerService, AddressService, PropertyService, $timeout, $sce, NgTableParams) {
         var vm = this;
 
         vm.submit = submit;
@@ -43,7 +43,7 @@
                     .then(function (response) {
                         if(response) {
                             vm.propertyid = response.propertyid;
-                            vm.canonicalid = response.canonicalid;
+                            vm.canonicalid = response.property_canonical_id;
                             vm.property = [response.address1, response.address2, response.suburb, response.state, response.postcode].join(' ');
                             vm.addressone = response.address1;
                             vm.addresstwo = response.address2;
@@ -54,7 +54,31 @@
                             vm.propertytype = {propertytypename: response.propertytype.name, propertytypeid: response.propertytype.typeid};
                             vm.longitude = response.longitude;
                             vm.latitude = response.latitude;
+
+                            // If we've got a property, load all claims
+                            PropertyService.GetAllClaims( vm.canonicalid, function(result, data) {
+
+                                if(result == false) {
+                                    data = [];
+                                    vm.tableParams = new NgTableParams({
+                                        page: 1,
+                                        count: 25
+                                    }, {
+                                        dataset: data
+                                    });
+                                } else {
+                                    vm.tableParams = new NgTableParams({
+                                        page: 1,
+                                        count: 25
+                                    }, {
+                                        dataset: data
+                                    });
+                                }
+                            });
+
+                            // Load Map
                             vm.mapurl = $sce.trustAsResourceUrl('https://www.google.com/maps/embed/v1/place?key=' + gmapkey + '&q= '+ vm.property + '&center=' + vm.latitude + ',' + vm.longitude);
+
                         } else {
                             alert("Property not found!");
                             $state.go("property");
@@ -108,7 +132,6 @@
                         vm.searcherror = "Address not found";
                     });
             }
-
 
         };
 

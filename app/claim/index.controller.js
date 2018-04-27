@@ -3,7 +3,7 @@
 
     angular
         .module('app')
-        .controller('Claim.IndexController', function(ClaimService, $scope, $state, $filter, $localStorage, NgTableParams){
+        .controller('Claim.IndexController', function(ClaimService, $scope, $state, $filter, $localStorage, NgTableParams, $stateParams){
 
             var vm = this;
             initController();
@@ -28,7 +28,6 @@
                     return true;
                 }
 
-
                 $scope.loadTableParams = function() {
                     vm.tableParams = new NgTableParams({
                         page: 1,
@@ -52,9 +51,11 @@
                             var filter = {
                                 submitteduser: undefined
                             }
+
                             if($scope.isCustomer()) {
                                 filter.submitteduser = vm.username
                             }
+
                             vm.tableParams = new NgTableParams({
                                 page: 1,
                                 count: 25,

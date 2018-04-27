@@ -12,7 +12,6 @@
         service.CreateClaim = CreateClaim;
         service.UpdateClaim = UpdateClaim;
         service.ClaimExists = ClaimExists;
-        service.GetClaimByUser = GetClaimByUser;
         service.GetClaimTypes = GetClaimTypes;
         service.GetClaimDetails = GetClaimDetails;
         service.GetStatusTypes = GetStatusTypes;
@@ -224,20 +223,7 @@
                 });
         }
 
-        function GetClaimByUser(username, callback) {
-            $http.get(apiDomain + apiVersion + '/claim/username/' + username, config)
-                .then( function (response) {
-                    var payload = response.data;
 
-                    if(payload.success) {
-                        callback(true, payload.claims);
-                    } else {
-                        callback(false, null);
-                    }
-                }, function(response) {
-                    callback(false, response.error);
-                });
-        }
     }
 
 })();

@@ -50,17 +50,12 @@
                 DashboardService.GetStaffDashboard(vm.username, function(results, response) {
 
                     if (results == true) {
-                        $scope.allrequests = response.allrequests;
-                        $scope.openrequests = response.openrequests;
-                        $scope.allapprovals = response.allapprovals;
-                        $scope.allproperties = response.allproperties;
                         $scope.myapprovals = response.forapprovals;
                         $scope.myrequests = response.requests;
                         $scope.myinspections = response.inspections;
                         $scope.myproperties = response.properties;
                     }
                 });
-
                 DashboardService.GetStaffCalendar(vm.username, function(results, response) {
                     $scope.calendarlist = response;
                 });
@@ -74,6 +69,20 @@
                         $scope.myproperties = response.properties;
                     }
                 })
+            }
+
+            // Only if it's admin
+            if($scope.isAdmin()) {
+                DashboardService.GetAdminDashboard(function(results, response) {
+
+                    if (results == true) {
+
+                        $scope.allrequests = response.allrequests;
+                        $scope.openrequests = response.openrequests;
+                        $scope.allapprovals = response.allapprovals;
+                        $scope.allproperties = response.allproperties;
+                    }
+                });
             }
 
             $scope.notificationlist = undefined;

@@ -16,6 +16,7 @@
         service.GetAllStaff = GetAllStaff;
         service.GetUserTypes = GetUserTypes;
         service.SearchStaff = SearchStaff;
+        service.GetAllClaims = GetAllClaims;
 
         var apiDomain = 'http://localhost:3000';
         var apiVersion = '/api/v1';
@@ -103,6 +104,21 @@
                     }
                 }, function(response) {
                     return null;
+                });
+        }
+
+        function GetAllClaims(username, callback) {
+            $http.get(apiDomain + apiVersion + '/claim/staff/' + username, config)
+                .then( function (response) {
+                    var payload = response.data;
+
+                    if(payload.success) {
+                        callback(true, payload.claims);
+                    } else {
+                        callback(false, null);
+                    }
+                }, function(response) {
+                    callback(false, response.error);
                 });
         }
 

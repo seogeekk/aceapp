@@ -32,6 +32,9 @@
                         <td data-title="'Type'" filter="{'customertype.typeid': 'select'} " filter-data="getCTypes()">{{ c.customertype.name }}</td>
                         <td data-title="'Address'">{{ c.address1 }} {{ c.address2 }} {{ c.suburb }} {{ c.state }} {{ c.suburb }}</td>
                     </tr>
+                    <tr class="odd gradeX" ng-show="$data.length == 0">
+                        <td class="text-center" colspan="9">No Results</td>
+                    </tr>
                 </table>
             </div>
         </div>

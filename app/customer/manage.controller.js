@@ -5,7 +5,7 @@
         .module('app')
         .controller('ManageCustomer.IndexController', Controller);
 
-    function Controller($scope, $location, $state, $stateParams, $localStorage, CustomerService, AddressService, UserService, $timeout) {
+    function Controller($scope, $location, $state, $stateParams, $localStorage, CustomerService, AddressService, UserService, $timeout, NgTableParams) {
         var vm = this;
 
         vm.submit = submit;
@@ -54,6 +54,27 @@
                                 .then(function(response) {
                                     vm.userstatus = response;
                                 });
+
+                            // If we've got a customer, load all claims
+                            CustomerService.GetAllClaims( vm.customerusername, function(result, data) {
+
+                                if(result == false) {
+                                    data = [];
+                                    vm.tableParams = new NgTableParams({
+                                        page: 1,
+                                        count: 25
+                                    }, {
+                                        dataset: data
+                                    });
+                                } else {
+                                    vm.tableParams = new NgTableParams({
+                                        page: 1,
+                                        count: 25
+                                    }, {
+                                        dataset: data
+                                    });
+                                }
+                            });
                         } else {
                             alert("Customer not found!");
                             $state.go("customer");

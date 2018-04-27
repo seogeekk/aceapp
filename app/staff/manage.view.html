@@ -41,7 +41,7 @@
                                     <div ng-message="required">Username is required</div>
                                 </div>
                             </div>
-                            <div style="display: inline-block" ng-show="vm.username != vm.staffusername">
+                            <div style="display: inline-block" ng-show="vm.username != vm.staffusername && vm.staffusername">
                                 <label for="resetButton">&nbsp;</label>
                                 <button class="btn btn-danger btn-block btn-outline" name="resetButton" type="button" ng-click="resetPassword()" ng-disabled="vm.resetloading">Reset Password</button>
                             </div>
@@ -154,6 +154,30 @@
                 <div ng-if="vm.statusalert" class="alert alert-success">{{vm.statusalert}}</div>
             </div>
         </div>
+</div>
+<div class="row">
+    <div class="col-lg-9">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    Requests related to this Staff
+                </h4>
+            </div>
+            <div class="panel-body">
+                <table width="100%" wt-responsive-table class="table table-striped table-hover" ng-table="vm.tableParams" show-filter="true">
+                    <tr class="odd gradeX" ng-repeat="c in $data">
+                        <td data-title="'Request ID'" sortable="'claimid'" class="text-center" filter="{'claimid': 'text'}"><a href="#!/request/manage/{{c.claimid}}">{{ c.claimid }}</a></td>
+                        <td data-title="'Summary'" filter="{'summary': 'text'}">{{ c.summary }}</td>
+                        <td data-title="'Claim Type'">{{ c.claimtypename }}</td>
+                        <td data-title="'Submitted Date'" sortable="'submitteddate'">{{ c.submitteddate | date: "medium"}}</td>
+                    </tr>
+                    <tr class="odd gradeX" ng-show="$data.length == 0">
+                        <td class="text-center" colspan="9">No Results</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

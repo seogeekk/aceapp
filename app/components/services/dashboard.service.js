@@ -9,6 +9,7 @@
         var service = {};
 
         service.GetStaffDashboard = GetStaffDashboard;
+        service.GetAdminDashboard = GetAdminDashboard;
         service.GetUserDashboard = GetUserDashboard;
         service.GetStaffCalendar = GetStaffCalendar;
         service.GetSuburbStat = GetSuburbStat;
@@ -51,6 +52,22 @@
 
         function GetStaffDashboard(username, callback) {
             $http.get(apiDomain + apiVersion + '/dashboard/staff/' + username, config)
+                .then( function (response) {
+
+                    var payload = response.data;
+
+                    if(payload.success) {
+                        callback(true, payload.dashboard);
+                    } else {
+                        callback(false);
+                    }
+                }, function(response) {
+                    callback(false);
+                });
+        }
+
+        function GetAdminDashboard(callback) {
+            $http.get(apiDomain + apiVersion + '/dashboard/admin/', config)
                 .then( function (response) {
 
                     var payload = response.data;
