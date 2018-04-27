@@ -40,7 +40,7 @@
                                     <div ng-message="required">Username is required</div>
                                 </div>
                             </div>
-                            <div style="display: inline-block" ng-show="vm.username != vm.customerusername && vm.customerusername">
+                            <div style="display: inline-block" ng-show="vm.username != vm.customerusername && vm.customerid">
                                 <label for="resetButton">&nbsp;</label>
                                 <button class="btn btn-danger btn-block btn-outline" name="resetButton" type="button" ng-click="resetPassword()" ng-disabled="vm.resetloading">Reset Password</button>
                             </div>
@@ -123,7 +123,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3" ng-show="vm.customerusername">
+        <div class="col-lg-3" ng-show="vm.customerid">
             <div class="form-group row">
                 <div class="col-xs-12">
                     <label for="userstatus">User Status</label>
@@ -149,7 +149,7 @@
             </div>
         </div>
 </div>
-<div class="row" ng-show="vm.customerusername">
+<div class="row" ng-show="vm.customerid">
     <div class="col-lg-9">
         <div class="panel panel-default">
             <div class="panel-heading">

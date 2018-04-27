@@ -149,7 +149,7 @@
                             <hr>
                             <table width="100%" class="table table-striped table-hover" ng-table="vm.tableRequestDuration" show-filter="true">
                                 <tr class="odd gradeX" ng-repeat="c in $data">
-                                    <td data-title="'Request ID'" filter="{'claimid': 'text'}" class="text-center"><a href="#/request/manage/{{c.claimid}}">{{c.claimid}}</a></td>
+                                    <td data-title="'Request ID'" filter="{'claimid': 'text'}" class="text-center"><a href="#!/request/manage/{{c.claimid}}">{{c.claimid}}</a></td>
                                     <td data-title="'Status'" filter="{'status': 'text'}">{{ c.status }}</td>
                                     <td data-title="'Start Date'" sortable="'startdate'">{{ c.startdate |date : "medium" }}</td>
                                     <td data-title="'End Date'" sortable="'enddate'">{{ c.enddate |date : "medium" }}</td>

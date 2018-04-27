@@ -35,7 +35,7 @@
                     </div>
                     <div class="col-xs-4">
                         <label for="enddate">End Date</label>
-                        <div class="input-group" moment-picker="vm.enddate" format="YYYY MMMM DD">
+                        <div class="input-group" moment-picker="vm.enddate" min-date="vm.startdate" format="YYYY MMMM DD">
                             <input class="form-control" name="enddate" placeholder="Select a date" ng-model="vm.enddate" ng-model-options="{ updateOn: 'blur' }">
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
@@ -46,15 +46,15 @@
                         <table width="100%" class="table table-striped table-hover" ng-table="vm.tableParams" show-filter="true">
                             <tr class="odd gradeX" ng-repeat="c in $data">
                                 <td data-title="'No'" sortable="'claimid'" filter="{'claimid': 'text'}" class="text-center"><a href="" ng-click="viewClaim(c.claimid)">{{ c.claimid }}</a></td>
-                                <td data-title="'Summary'" filter="{'summary': 'text'}">{{ c.summary }}</td>
+                                <td data-title="'Summary'" filter="{'summary': 'text'}" sortable="'summary'">{{ c.summary }}</td>
                                 <td data-title="'Address'" >{{ c.property.address1 }} {{ c.property.address2 }}</td>
-                                <td data-title="'Suburb'" filter="{'property.suburb': 'text'}">{{ c.property.suburb }}</td>
-                                <td data-title="'State'" filter="{'property.state': 'text'}">{{ c.property.state }}</td>
-                                <td data-title="'Type'" filter="{'claimtype.typeid': 'select'}" filter-data="getCTypes()">{{ c.claimtype.name }}</td>
+                                <td data-title="'Suburb'" filter="{'property.suburb': 'text'}" soratble="'property.suburb'">{{ c.property.suburb }}</td>
+                                <td data-title="'State'" filter="{'property.state': 'text'}" sortable="'property.state'">{{ c.property.state }}</td>
+                                <td data-title="'Type'" filter="{'claimtype.typeid': 'select'}" filter-data="getCTypes()" sortable="'claimtype.name'">{{ c.claimtype.name }}</td>
                                 <td data-title="'Submitted Date'" sortable="'submitteddate'">{{ c.submitteddate | date: "medium" }}</td>
-                                <td data-title="'Submitted User'" ng-if="isStaff()" filter="{'submittedname': 'text'}">{{ c.submittedname }}</td>
-                                <td data-title="'Assigned To'" ng-if="isStaff()" filter="{'assignname': 'text'}">{{ c.assignname }}</td>
-                                <td data-title="'Status'" filter="{'status.statusid': 'select'}" filter-data="getSTypes()">{{ c.status.statusname }}</td>
+                                <td data-title="'Submitted User'" ng-if="isStaff()" filter="{'submittedname': 'text'}" sortable="'submittedname'">{{ c.submittedname }}</td>
+                                <td data-title="'Assigned To'" ng-if="isStaff()" filter="{'assignname': 'text'}" sortable="'assignanme'">{{ c.assignname }}</td>
+                                <td data-title="'Status'" filter="{'status.statusid': 'select'}" filter-data="getSTypes()" sortable="'status.statusname'">{{ c.status.statusname }}</td>
                             </tr>
                             <tr class="odd gradeX" ng-show="$data.length == 0">
                                 <td class="text-center" colspan="9">No Results</td>

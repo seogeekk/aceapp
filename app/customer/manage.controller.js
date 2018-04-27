@@ -187,15 +187,58 @@
             var CustDetails = {
                 username: vm.customerusername,
                 customertypeid: vm.custtype.custtypeid,
-                customername: [vm.firstname, vm.lastname].join(' ')
+                firstname: vm.firstname,
+                lastname: vm.lastname,
+                customername: [vm.firstname, vm.lastname].join(' '),
+                mobilenumber: vm.mobile,
+                emailaddress: vm.email
             };
+
 
             if (vm.customerid) {
                 // if update customer, assign customerid
                 CustDetails.customerid = vm.customerid;
                 CustDetails.custname = vm.firstname + ' ' + vm.lastname;
 
-                CustomerService.UpdateCustomer(CustDetails, function(results, response){
+                if (vm.property) {
+                    // Get property details
+                    AddressService.CompleteAddress(vm.property)
+                        .then(function (response) {
+                            if (response) {
+                                CustDetails.address1= response.address1;
+                                CustDetails.address2= response.address2;
+                                CustDetails.suburb= response.suburb;
+                                CustDetails.state= response.state;
+                                CustDetails.postcode=response.postcode;
+                                CustDetails.country= 'AUSTRALIA';
+                            }
+
+                            // Update customer
+                            CustomerService.UpdateCustomer(CustDetails, function(results, response){
+                                if (results == true) {
+                                    // Update user-related
+                                    UserService.UpdateUser(CustDetails, function(results, response){
+                                        if (results == true) {
+                                            vm.alert = "Customer successfully updated!";
+                                            $timeout(function() {
+                                                vm.alert = undefined;
+                                            }, 3000);
+                                            vm.loading = false;
+                                        } else {
+                                            // Return callback error
+                                            vm.error = 'Something went wrong!';
+                                            vm.loading = false;
+                                        }
+                                    });
+                                } else {
+                                    // Return callback error
+                                    vm.error = 'Something went wrong!';
+                                    vm.loading = false;
+                                }
+                            });
+                        });
+                } else {
+                    CustomerService.UpdateCustomer(CustDetails, function(results, response){
                         if (results == true) {
                             vm.alert = "Customer successfully updated!";
                             $timeout(function() {
@@ -208,6 +251,8 @@
                             vm.loading = false;
                         }
                     });
+                }
+
             } else {
                 // if create user, assign role
                 var password = randomPassword();
@@ -217,29 +262,75 @@
                 CustDetails.lastname= vm.lastname;
                 CustDetails.emailaddress = vm.email;
                 CustDetails.password = password;
+                CustDetails.customertype = vm.custtype;
+                CustDetails.mobilenumber = vm.mobile;
 
-                CustomerService.CreateCustomer(CustDetails, function(results, response) {
-                    if (results == true) {
-                        vm.customerid = response.id;
-                        vm.alert = "Customer successfully added!";
-                        $timeout(function() {
-                            vm.alert = undefined;
-                        }, 3000);
-                        vm.loading = false;
+                if (vm.property) {
+                    // Get property details
+                    AddressService.CompleteAddress(vm.property)
+                        .then(function (response) {
+                            if (response) {
+                                CustDetails.address = {
+                                    address1: response.address1,
+                                    address2: response.address2,
+                                    suburb: response.suburb,
+                                    state: response.state,
+                                    postcode: response.postcode,
+                                    country: 'AUSTRALIA'
+                                }
+                            }
 
-                        // Prompt user with auto-generated password
-                        alert("Password: " + password);
-                        $state.go("managecustomer", {customerusername: vm.customerusername});
-                    } else {
-                        // Return callback error
-                        if(response.code == 'ER_DUP_ENTRY') {
-                            vm.error = 'Username already exists';
+                            // Create Customer
+                            CustomerService.CreateCustomer(CustDetails, function(results, response) {
+                                if (results == true) {
+                                    vm.customerid = response.id;
+                                    vm.alert = "Customer successfully added!";
+                                    $timeout(function() {
+                                        vm.alert = undefined;
+                                    }, 3000);
+                                    vm.loading = false;
+
+                                    // Prompt user with auto-generated password
+                                    alert("Password: " + password);
+                                    $state.go("managecustomer", {customerusername: vm.customerusername});
+                                } else {
+                                    // Return callback error
+                                    if(response.code == 'ER_DUP_ENTRY') {
+                                        vm.error = 'Username already exists';
+                                    } else {
+                                        vm.error = 'Something went wrong!';
+                                    }
+                                    vm.loading = false;
+                                }
+                            })
+                        });
+                } else {
+                    CustomerService.CreateCustomer(CustDetails, function(results, response) {
+                        if (results == true) {
+                            vm.customerid = response.id;
+                            vm.alert = "Customer successfully added!";
+                            $timeout(function() {
+                                vm.alert = undefined;
+                            }, 3000);
+                            vm.loading = false;
+
+                            // Prompt user with auto-generated password
+                            alert("Password: " + password);
+                            $state.go("managecustomer", {customerusername: vm.customerusername});
                         } else {
-                            vm.error = 'Something went wrong!';
+                            // Return callback error
+                            if(response.code == 'ER_DUP_ENTRY') {
+                                vm.error = 'Username already exists';
+                            } else {
+                                vm.error = 'Something went wrong!';
+                            }
+                            vm.loading = false;
                         }
-                        vm.loading = false;
-                    }
-                })
+                    })
+                }
+
+
+
             }
 
         };

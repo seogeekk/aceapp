@@ -17,7 +17,7 @@
         function CreateUser(UserDetails, callback) {
             $http.post(apiDomain + '/createuser', UserDetails)
                 .then( function (response) {
-                    console.log(response);
+
                     var payload = response.data;
                     if(response.status == 200) {
                         callback(true, payload);

@@ -59,7 +59,6 @@
         function CreateCustomer(UserDetails, callback) {
             $http.post(apiDomain + '/createuser', UserDetails)
                 .then( function (response) {
-                    console.log(response);
                     var payload = response.data;
                     if(response.status == 200) {
                         callback(true, payload);
@@ -68,7 +67,6 @@
                         callback(false, payload);
                     }
                 }, function(response) {
-                    console.log(response);
                     callback(false, response.data);
                 });
         }
@@ -91,17 +89,14 @@
         function UpdateCustomer(UserDetails, callback) {
             return $http.post(apiDomain + apiVersion + '/customer/update', UserDetails, config)
                 .then( function (response) {
-                    // login successful if there's a token in the reponse
+
                     var payload = response.data;
                     if(payload.success) {
-                        // store username and token in local storage to keep user logged in between page refreshes
                         callback(true,payload.customer);
                     } else {
-                        // execute callback with false to indicate failed login
                         callback(false,response.error);
                     }
                 }, function(response) {
-                    console.log(response);
                     callback(false,response.error);
                 });
         }
