@@ -23,6 +23,7 @@
                 username: vm.username,
                 firstname: vm.firstname,
                 lastname: vm.lastname,
+                custname: vm.firstname + ' ' + vm.lastname,
                 emailaddress: vm.email,
                 password: vm.password
             }
