@@ -43,6 +43,7 @@
         function loadDetails(token) {
             InspectionService.GetInspectionByToken(token, function(result, response) {
                 if (result) {
+                    console.log(response);
                     vm.inspectionid = response.inspectionid;
                     vm.valid = response.valid;
                     vm.response = response.response;
